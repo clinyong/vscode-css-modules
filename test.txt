@@ -1,0 +1,3 @@
+const styles = require("/index.scss")
+
+asdlfkj asldkjf alkj.O styles.kk styles.i styles.
