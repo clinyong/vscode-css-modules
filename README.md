@@ -15,7 +15,7 @@ Search `css modules` on the [VS Code Marketplace](https://code.visualstudio.com/
 
 ## Usage
 
-ES6 style import is not support yet, so use CommonJS like below
+ES6 style import is not supported yet, so use CommonJS like below
 
 ```javascript
 const styles = require('./index.scss');
