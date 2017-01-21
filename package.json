@@ -1,7 +1,7 @@
 {
     "name": "vscode-css-modules",
     "displayName": "CSS Modules",
-    "description": "",
+    "description": "Visual Studio Code extension for CSS Modules",
     "version": "0.0.1",
     "publisher": "clinyong",
     "engines": {
@@ -10,6 +10,11 @@
     "categories": [
         "Other"
     ],
+    "homepage": "https://github.com/clinyong/vscode-css-modules",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/clinyong/vscode-css-modules"
+	},
     "activationEvents": [
         "onLanguage:typescriptreact",
         "onLanguage:javascriptreact"
