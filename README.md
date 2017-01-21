@@ -7,4 +7,4 @@ Extension for [CSS Modules](https://github.com/css-modules/css-modules), which s
 
 ## Demo
 
-![](images/demo.gif)
+![](http://i.giphy.com/l0EwY2Mk4IBgIholi.gif)
