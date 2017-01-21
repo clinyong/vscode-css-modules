@@ -11,7 +11,8 @@
         "Other"
     ],
     "activationEvents": [
-        "onLanguage:plaintext"
+        "onLanguage:typescriptreact",
+        "onLanguage:javascriptreact"
     ],
     "main": "./out/src/extension",
     "scripts": {
