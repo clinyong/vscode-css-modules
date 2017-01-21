@@ -1,4 +1,4 @@
-import { CompletionItemProvider, TextDocument, Position, CompletionItem } from "vscode";
+import { CompletionItemProvider, TextDocument, Position, CompletionItem, CompletionItemKind } from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
@@ -72,7 +72,7 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
 
         const classNames = getAllClassNames(importPath);
 
-        return Promise.resolve(classNames.map(name => new CompletionItem(name)));
+        return Promise.resolve(classNames.map(name => new CompletionItem(name, CompletionItemKind.Variable)));
     }
 }
 
