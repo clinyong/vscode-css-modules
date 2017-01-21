@@ -31,11 +31,12 @@ function getVar(line: string, position: Position): string {
     }
 }
 
-function getPosition(filePath: string, keyWord: string): Position {
+function getPosition(filePath: string, className: string): Position {
     const content = fs.readFileSync(filePath, { encoding: "utf8" });
     const lines = content.split("\n")
 
     let index = -1
+    const keyWord = `.${className}`
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].indexOf(keyWord) !== -1) {
             index = i
