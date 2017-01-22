@@ -9,8 +9,8 @@ import {
 
 // check if current character or last character is .
 function isTrigger(line: string, position: Position): boolean {
-    const i = position.character - 1
-    return line[i] === "." || (i > 1 && line[i-1] === ".")
+    const i = position.character - 1;
+    return line[i] === "." || (i > 1 && line[i - 1] === ".");
 }
 
 function getWords(line: string, position: Position): string[] {
@@ -37,7 +37,7 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
 
         const words = getWords(currentLine, position);
 
-        const importPath = findImportPath(document.getText(), words[0], currentDir)
+        const importPath = findImportPath(document.getText(), words[0], currentDir);
         if (!isCSSLikeFile(importPath)) {
             return Promise.resolve([]);
         }

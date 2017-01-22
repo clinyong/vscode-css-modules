@@ -15,7 +15,7 @@ export function findImportPath(text: string, key: string, parentPath: string): s
     if (!!results && results.length > 0) {
         return path.resolve(parentPath, results[1]);
     } else {
-        return ""
+        return "";
     }
 }
 
@@ -26,12 +26,12 @@ export function isCSSLikeFile(filePath: string): boolean {
 
 export function getAllClassNames(filePath: string, keyword: string): string[] {
     const content = fs.readFileSync(filePath, { encoding: "utf8" });
-    const lines = content.match(/.*{/g)
+    const lines = content.match(/.*{/g);
     if (lines === null) {
         return [];
     }
 
-    const classNames = lines.join(' ').match(/\.[_A-Za-z0-9\-]+/g)
+    const classNames = lines.join(" ").match(/\.[_A-Za-z0-9\-]+/g);
     if (classNames === null) {
         return [];
     }

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+files=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.tsx?$")
+if [ "$files" = "" ]; then
+    exit 0
+fi
+
+pass=true
+
+for file in ${files}; do
+    result=$(./node_modules/.bin/tslint ${file})
+	if [[ $result != "" ]]; then
+		pass=false
+		echo $result
+	fi
+done
+
+if ! $pass; then
+    echo "\033[91mCOMMIT FAILED:\033[0m Your commit contains files that should pass TSLint but do not. Please fix the TSLint errors and try again."
+    exit 1
+fi
