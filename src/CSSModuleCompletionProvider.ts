@@ -7,20 +7,22 @@ import {
     getCurrentLine
 } from "./utils";
 
-function getTrigger(line: string, position: Position): string {
-    return line.substr(position.character - 1, 1);
+// check if current character or last character is .
+function isTrigger(line: string, position: Position): boolean {
+    const i = position.character - 1
+    return line[i] === "." || (i > 1 && line[i-1] === ".")
 }
 
-function getVar(line: string, position: Position): string {
-    const text = line.slice(0, position.character - 1)
+function getWords(line: string, position: Position): string[] {
+    const text = line.slice(0, position.character);
 
     const indexBySpace = text.lastIndexOf(" ");
     const indexByBracket = text.lastIndexOf("{");
 
     if (indexBySpace > indexByBracket) {
-        return text.slice(indexBySpace + 1)
+        return text.slice(indexBySpace + 1).split(".");
     } else {
-        return text.slice(indexByBracket + 1)
+        return text.slice(indexByBracket + 1).split(".");
     }
 }
 
@@ -29,19 +31,18 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
         const currentLine = getCurrentLine(document, position);
         const currentDir = path.dirname(document.uri.fsPath);
 
-        const trigger = getTrigger(currentLine, position);
-        if (trigger !== ".") {
+        if (!isTrigger(currentLine, position)) {
             return Promise.resolve([]);
         }
 
-        const word = getVar(currentLine, position);
+        const words = getWords(currentLine, position);
 
-        const importPath = findImportPath(document.getText(), word, currentDir)
+        const importPath = findImportPath(document.getText(), words[0], currentDir)
         if (!isCSSLikeFile(importPath)) {
             return Promise.resolve([]);
         }
 
-        const classNames = getAllClassNames(importPath);
+        const classNames = getAllClassNames(importPath, words[1]);
 
         return Promise.resolve(classNames.map(name => new CompletionItem(name, CompletionItemKind.Variable)));
     }

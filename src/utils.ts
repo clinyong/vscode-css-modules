@@ -24,7 +24,7 @@ export function isCSSLikeFile(filePath: string): boolean {
     return ext === ".css" || ext === ".scss";
 }
 
-export function getAllClassNames(filePath: string): string[] {
+export function getAllClassNames(filePath: string, keyword: string): string[] {
     const content = fs.readFileSync(filePath, { encoding: "utf8" });
     const lines = content.match(/.*{/g)
     if (lines === null) {
@@ -36,5 +36,6 @@ export function getAllClassNames(filePath: string): string[] {
         return [];
     }
 
-    return _.uniq(classNames).map(item => item.slice(1));
+    const uniqNames = _.uniq(classNames).map(item => item.slice(1));
+    return keyword !== "" ? uniqNames.filter(item => item.indexOf(keyword) !== -1) : uniqNames;
 }

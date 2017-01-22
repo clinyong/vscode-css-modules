@@ -8,9 +8,8 @@ export function activate(context: ExtensionContext) {
         { language: 'typescriptreact', scheme: 'file' },
         { language: 'javascriptreact', scheme: 'file' }
     ];
-    const trigger = "\.";
     context.subscriptions.push(
-        languages.registerCompletionItemProvider(mode, new CSSModuleCompletionProvider(), trigger)
+        languages.registerCompletionItemProvider(mode, new CSSModuleCompletionProvider(), ".")
     );
     context.subscriptions.push(
         languages.registerDefinitionProvider(mode, new CSSModuleDefinitionProvider())
