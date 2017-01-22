@@ -10,7 +10,7 @@ function getTextWithinString(text: string) {
     return text.slice(start + 1, end);
 }
 
-function getVar(line: string, position: Position): string {
+function getWords(line: string, position: Position): string {
     const headText = line.slice(0, position.character);
     const tailText = line.slice(position.character);
 
@@ -54,10 +54,10 @@ function getPosition(filePath: string, className: string): Position {
 export class CSSModuleDefinitionProvider implements DefinitionProvider {
     public provideDefinition(document: TextDocument, position: Position, token: CancellationToken): Thenable<Location> {
         const currentLine = getCurrentLine(document, position);
-        const word = getVar(currentLine, position);
+        const words = getWords(currentLine, position);
         const currentDir = path.dirname(document.uri.fsPath);
 
-        const [obj, field] = word.split(".");
+        const [obj, field] = words.split(".");
         const importPath = findImportPath(document.getText(), obj, currentDir);
         if (!isCSSLikeFile(importPath)) {
             return Promise.resolve(null);

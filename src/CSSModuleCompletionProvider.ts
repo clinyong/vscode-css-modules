@@ -13,16 +13,16 @@ function isTrigger(line: string, position: Position): boolean {
     return line[i] === "." || (i > 1 && line[i - 1] === ".");
 }
 
-function getWords(line: string, position: Position): string[] {
+function getWords(line: string, position: Position): string {
     const text = line.slice(0, position.character);
 
     const indexBySpace = text.lastIndexOf(" ");
     const indexByBracket = text.lastIndexOf("{");
 
     if (indexBySpace > indexByBracket) {
-        return text.slice(indexBySpace + 1).split(".");
+        return text.slice(indexBySpace + 1);
     } else {
-        return text.slice(indexByBracket + 1).split(".");
+        return text.slice(indexByBracket + 1);
     }
 }
 
@@ -36,13 +36,14 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
         }
 
         const words = getWords(currentLine, position);
+        const [obj, field] = words.split(".");
 
-        const importPath = findImportPath(document.getText(), words[0], currentDir);
+        const importPath = findImportPath(document.getText(), obj, currentDir);
         if (!isCSSLikeFile(importPath)) {
             return Promise.resolve([]);
         }
 
-        const classNames = getAllClassNames(importPath, words[1]);
+        const classNames = getAllClassNames(importPath, field);
 
         return Promise.resolve(classNames.map(name => new CompletionItem(name, CompletionItemKind.Variable)));
     }
