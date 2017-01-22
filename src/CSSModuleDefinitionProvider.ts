@@ -3,13 +3,6 @@ import { getCurrentLine, findImportPath, isCSSLikeFile } from "./utils";
 import * as path from "path";
 import * as fs from "fs";
 
-function getTextWithinString(text: string) {
-    const start = text.indexOf('"');
-    const end = text.lastIndexOf('"');
-
-    return text.slice(start + 1, end);
-}
-
 function getWords(line: string, position: Position): string {
     const headText = line.slice(0, position.character);
     const tailText = line.slice(position.character);
@@ -51,13 +44,39 @@ function getPosition(filePath: string, className: string): Position {
     }
 }
 
+function isImportLine(line: string): RegExpExecArray | null {
+    return /\s+(\S+)\s+=\s+require\(['"](.+\.\S{1,2}ss)['"]\)/.exec(line);
+}
+
+function isValidMatches(line: string, matches: RegExpExecArray, current: number): boolean {
+    if (matches === null) {
+        return false;
+    }
+
+    const start1 = line.indexOf(matches[1]) + 1;
+    const start2 = line.indexOf(matches[2]) + 1;
+    return (current > start2 && current < start2 + matches[2].length) || (current > start1 && current < start1 + matches[1].length);
+}
+
 export class CSSModuleDefinitionProvider implements DefinitionProvider {
     public provideDefinition(document: TextDocument, position: Position, token: CancellationToken): Thenable<Location> {
-        const currentLine = getCurrentLine(document, position);
-        const words = getWords(currentLine, position);
         const currentDir = path.dirname(document.uri.fsPath);
+        const currentLine = getCurrentLine(document, position);
 
+        const matches = isImportLine(currentLine);
+        if (isValidMatches(currentLine, matches, position.character)) {
+            return Promise.resolve(new Location(
+                Uri.file(path.resolve(currentDir, matches[2])),
+                new Position(0, 0)
+            ));
+        }
+
+        const words = getWords(currentLine, position);
         const [obj, field] = words.split(".");
+        if (!field) {
+            return Promise.resolve(null);
+        }
+
         const importPath = findImportPath(document.getText(), obj, currentDir);
         if (!isCSSLikeFile(importPath)) {
             return Promise.resolve(null);
