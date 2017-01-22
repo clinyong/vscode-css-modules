@@ -20,7 +20,7 @@ export function findImportPath(text: string, key: string, parentPath: string): s
 
 export function getAllClassNames(filePath: string, keyword: string): string[] {
     const content = fs.readFileSync(filePath, { encoding: "utf8" });
-    const lines = content.match(/.*{/g);
+    const lines = content.match(/.*[,{]/g);
     if (lines === null) {
         return [];
     }
