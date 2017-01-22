@@ -8,20 +8,14 @@ export function getCurrentLine(document: TextDocument, position: Position): stri
 }
 
 export function findImportPath(text: string, key: string, parentPath: string): string {
-    // const match = `${key}\\s+from\\s+["'](.+)["']`
-    const match = `${key}\\s+=\\s+require\\(["'](.+)["']\\)`;
-    const re = new RegExp(match, "g");
+    const match = `${key}\\s+=\\s+require\\(["'](.+\.\\S{1,2}ss)["']\\)`;
+    const re = new RegExp(match);
     const results = re.exec(text);
     if (!!results && results.length > 0) {
         return path.resolve(parentPath, results[1]);
     } else {
         return "";
     }
-}
-
-export function isCSSLikeFile(filePath: string): boolean {
-    const ext = path.extname(filePath);
-    return ext === ".css" || ext === ".scss";
 }
 
 export function getAllClassNames(filePath: string, keyword: string): string[] {

@@ -1,7 +1,6 @@
 import { CompletionItemProvider, TextDocument, Position, CompletionItem, CompletionItemKind } from "vscode";
 import * as path from "path";
 import {
-    isCSSLikeFile,
     findImportPath,
     getAllClassNames,
     getCurrentLine
@@ -39,10 +38,6 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
         const [obj, field] = words.split(".");
 
         const importPath = findImportPath(document.getText(), obj, currentDir);
-        if (!isCSSLikeFile(importPath)) {
-            return Promise.resolve([]);
-        }
-
         const classNames = getAllClassNames(importPath, field);
 
         return Promise.resolve(classNames.map(name => new CompletionItem(name, CompletionItemKind.Variable)));

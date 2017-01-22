@@ -1,5 +1,5 @@
 import { DefinitionProvider, TextDocument, Position, CancellationToken, Location, Uri } from "vscode";
-import { getCurrentLine, findImportPath, isCSSLikeFile } from "./utils";
+import { getCurrentLine, findImportPath } from "./utils";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -78,10 +78,6 @@ export class CSSModuleDefinitionProvider implements DefinitionProvider {
         }
 
         const importPath = findImportPath(document.getText(), obj, currentDir);
-        if (!isCSSLikeFile(importPath)) {
-            return Promise.resolve(null);
-        }
-
         const targetPosition = getPosition(importPath, field);
 
         if (targetPosition === null) {
