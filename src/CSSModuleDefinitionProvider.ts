@@ -28,19 +28,21 @@ function getPosition(filePath: string, className: string): Position {
     const content = fs.readFileSync(filePath, { encoding: "utf8" });
     const lines = content.split("\n");
 
-    let index = -1;
+    let line = -1;
+    let character = -1;
     const keyWord = `.${className}`;
     for (let i = 0; i < lines.length; i++) {
-        if (lines[i].indexOf(keyWord) !== -1) {
-            index = i;
+        character = lines[i].indexOf(keyWord);
+        if (character !== -1) {
+            line = i;
             break;
         }
     }
 
-    if (index === -1) {
+    if (line === -1) {
         return null;
     } else {
-        return new Position(index, 0);
+        return new Position(line, character + 1);
     }
 }
 
