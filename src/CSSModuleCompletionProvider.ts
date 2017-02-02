@@ -14,15 +14,12 @@ function isTrigger(line: string, position: Position): boolean {
 
 function getWords(line: string, position: Position): string {
     const text = line.slice(0, position.character);
-
-    const indexBySpace = text.lastIndexOf(" ");
-    const indexByBracket = text.lastIndexOf("{");
-
-    if (indexBySpace > indexByBracket) {
-        return text.slice(indexBySpace + 1);
-    } else {
-        return text.slice(indexByBracket + 1);
+    const index = text.search(/[a-zA-Z0-9._]*$/);
+    if (index === -1) {
+        return "";
     }
+
+    return text.slice(index);
 }
 
 export class CSSModuleCompletionProvider implements CompletionItemProvider {
@@ -35,6 +32,10 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
         }
 
         const words = getWords(currentLine, position);
+        if (words === "") {
+            return Promise.resolve([]);
+        }
+
         const [obj, field] = words.split(".");
 
         const importPath = findImportPath(document.getText(), obj, currentDir);
