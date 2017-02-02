@@ -2,26 +2,30 @@ import { DefinitionProvider, TextDocument, Position, CancellationToken, Location
 import { getCurrentLine, findImportPath } from "./utils";
 import * as path from "path";
 import * as fs from "fs";
+import * as _ from "lodash";
+
+const targets = {
+    " ": " ",
+    "{": "}",
+    "(": ")"
+};
 
 function getWords(line: string, position: Position): string {
     const headText = line.slice(0, position.character);
     const tailText = line.slice(position.character);
 
-    const startBySpace = headText.lastIndexOf(" ");
-    const startByBracket = headText.lastIndexOf("{");
-
-    const endBySpace = tailText.indexOf(" ");
-    const endByBracket = tailText.indexOf("}");
-
-    if (startBySpace === startByBracket) {
+    const startIndex = headText.search(/[a-zA-Z0-9._]*$/);
+    // not found or not clicking object field
+    if (startIndex === -1 || headText.slice(startIndex).indexOf(".") === -1) {
         return "";
     }
 
-    if (startBySpace > startByBracket) {
-        return `${headText.slice(startBySpace + 1)}${tailText.slice(0, endBySpace)}`;
-    } else {
-        return `${headText.slice(startByBracket + 1)}${tailText.slice(0, endByBracket)}`;
+    let endIndex = tailText.indexOf(targets[headText[startIndex - 1]]);
+    if (endIndex === -1) {
+        endIndex = tailText.length;
     }
+
+    return `${headText.slice(startIndex + 1)}${tailText.slice(0, endIndex)}`;
 }
 
 function getPosition(filePath: string, className: string): Position {
@@ -74,11 +78,11 @@ export class CSSModuleDefinitionProvider implements DefinitionProvider {
         }
 
         const words = getWords(currentLine, position);
-        const [obj, field] = words.split(".");
-        if (!field) {
+        if (words === "" || words.indexOf(".") === -1) {
             return Promise.resolve(null);
         }
 
+        const [obj, field] = words.split(".");
         const importPath = findImportPath(document.getText(), obj, currentDir);
         const targetPosition = getPosition(importPath, field);
 
