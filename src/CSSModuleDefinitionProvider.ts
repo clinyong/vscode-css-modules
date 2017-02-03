@@ -25,7 +25,7 @@ function getWords(line: string, position: Position): string {
         endIndex = tailText.length;
     }
 
-    return `${headText.slice(startIndex + 1)}${tailText.slice(0, endIndex)}`;
+    return `${headText.slice(startIndex)}${tailText.slice(0, endIndex)}`;
 }
 
 function getPosition(filePath: string, className: string): Position {
