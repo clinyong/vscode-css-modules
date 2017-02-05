@@ -1,5 +1,7 @@
 # VSCode CSS Modules
 
+[![Build Status](https://travis-ci.org/clinyong/vscode-css-modules.svg?branch=master)](https://travis-ci.org/clinyong/vscode-css-modules)
+
 Extension for [CSS Modules](https://github.com/css-modules/css-modules), which supports
 
 - autocomplete
