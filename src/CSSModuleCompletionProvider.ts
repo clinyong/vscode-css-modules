@@ -14,7 +14,7 @@ function isTrigger(line: string, position: Position): boolean {
 
 function getWords(line: string, position: Position): string {
     const text = line.slice(0, position.character);
-    const index = text.search(/[a-zA-Z0-9._]*$/);
+    const index = text.search(/[a-zA-Z0-9\._]*$/);
     if (index === -1) {
         return "";
     }
