@@ -4,28 +4,20 @@ import * as path from "path";
 import * as fs from "fs";
 import * as _ from "lodash";
 
-const targets = {
-    " ": " ",
-    "{": "}",
-    "(": ")"
-};
-
 function getWords(line: string, position: Position): string {
     const headText = line.slice(0, position.character);
-    const tailText = line.slice(position.character);
-
-    const startIndex = headText.search(/[a-zA-Z0-9._]*$/);
+    const startIndex = headText.search(/[a-zA-Z0-9\._]*$/);
     // not found or not clicking object field
     if (startIndex === -1 || headText.slice(startIndex).indexOf(".") === -1) {
         return "";
     }
 
-    let endIndex = tailText.indexOf(targets[headText[startIndex - 1]]);
-    if (endIndex === -1) {
-        endIndex = tailText.length;
+    const match = /^([a-zA-Z0-9\._]*)/.exec(line.slice(startIndex));
+    if (match === null) {
+        return "";
     }
 
-    return `${headText.slice(startIndex)}${tailText.slice(0, endIndex)}`;
+    return match[1];
 }
 
 function getPosition(filePath: string, className: string): Position {
