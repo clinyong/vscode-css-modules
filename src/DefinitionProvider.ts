@@ -43,7 +43,12 @@ function getPosition(filePath: string, className: string): Position {
 }
 
 function isImportLine(line: string): RegExpExecArray | null {
-    return /\s+(\S+)\s+=\s+require\(['"](.+\.\S{1,2}ss)['"]\)/.exec(line);
+    const variable = "(\\S+)";
+    const file = "(.+\\.\\S{1,2}ss)";
+    const fromOrRequire = "(?:from\\s+|=\\s+require\\()";
+    const requireEndOptional = "\\)?";
+    const pattern = `\\s+${variable}\\s+${fromOrRequire}['"]${file}['"]${requireEndOptional}`;
+    return new RegExp(pattern).exec(line);
 }
 
 function isValidMatches(line: string, matches: RegExpExecArray, current: number): boolean {
@@ -53,6 +58,8 @@ function isValidMatches(line: string, matches: RegExpExecArray, current: number)
 
     const start1 = line.indexOf(matches[1]) + 1;
     const start2 = line.indexOf(matches[2]) + 1;
+
+    // check current character is between match words
     return (current > start2 && current < start2 + matches[2].length) || (current > start1 && current < start1 + matches[1].length);
 }
 
