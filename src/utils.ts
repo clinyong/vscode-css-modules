@@ -8,8 +8,11 @@ export function getCurrentLine(document: TextDocument, position: Position): stri
 }
 
 export function findImportPath(text: string, key: string, parentPath: string): string {
-    const match = `${key}\\s+=\\s+require\\(["'](.+\.\\S{1,2}ss)["']\\)`;
-    const re = new RegExp(match);
+    const fromOrRequire = "(?:from\\s+|=\\s+require\\()";
+    const file = "(.+\\.\\S{1,2}ss)";
+    const requireEndOptional = "\\)?";
+    const pattern = `${key}\\s+${fromOrRequire}["']${file}["']${requireEndOptional}`;
+    const re = new RegExp(pattern);
     const results = re.exec(text);
     if (!!results && results.length > 0) {
         return path.resolve(parentPath, results[1]);
