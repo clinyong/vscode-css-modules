@@ -74,6 +74,10 @@ export class CSSModuleDefinitionProvider implements DefinitionProvider {
 
         const [obj, field] = words.split(".");
         const importPath = findImportPath(document.getText(), obj, currentDir);
+        if (importPath === "") {
+            return Promise.resolve(null);
+        }
+
         const targetPosition = getPosition(importPath, field);
 
         if (targetPosition === null) {

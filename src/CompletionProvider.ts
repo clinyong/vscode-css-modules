@@ -39,6 +39,10 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
         const [obj, field] = words.split(".");
 
         const importPath = findImportPath(document.getText(), obj, currentDir);
+        if (importPath === "") {
+            return Promise.resolve([]);
+        }
+
         const classNames = getAllClassNames(importPath, field);
 
         return Promise.resolve(classNames.map(name => new CompletionItem(name, CompletionItemKind.Variable)));
