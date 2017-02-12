@@ -7,12 +7,16 @@ export function getCurrentLine(document: TextDocument, position: Position): stri
     return document.getText(document.lineAt(position).range);
 }
 
-export function findImportPath(text: string, key: string, parentPath: string): string {
-    const fromOrRequire = "(?:from\\s+|=\\s+require\\()";
+export function genImportRegExp(key: string ): RegExp {
     const file = "(.+\\.\\S{1,2}ss)";
+    const fromOrRequire = "(?:from\\s+|=\\s+require\\()";
     const requireEndOptional = "\\)?";
     const pattern = `${key}\\s+${fromOrRequire}["']${file}["']${requireEndOptional}`;
-    const re = new RegExp(pattern);
+    return new RegExp(pattern);
+}
+
+export function findImportPath(text: string, key: string, parentPath: string): string {
+    const re = genImportRegExp(key);
     const results = re.exec(text);
     if (!!results && results.length > 0) {
         return path.resolve(parentPath, results[1]);
