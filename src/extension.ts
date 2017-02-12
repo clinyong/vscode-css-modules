@@ -1,7 +1,7 @@
 "use strict";
 import { languages, ExtensionContext, DocumentFilter } from "vscode";
-import { CSSModuleCompletionProvider } from "./CSSModuleCompletionProvider";
-import { CSSModuleDefinitionProvider } from "./CSSModuleDefinitionProvider";
+import { CSSModuleCompletionProvider } from "./CompletionProvider";
+import { CSSModuleDefinitionProvider } from "./DefinitionProvider";
 
 export function activate(context: ExtensionContext) {
     const mode: DocumentFilter = [
