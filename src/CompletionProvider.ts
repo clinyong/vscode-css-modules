@@ -32,7 +32,7 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
         }
 
         const words = getWords(currentLine, position);
-        if (words === "") {
+        if (words === "" || words.indexOf(".") === -1) {
             return Promise.resolve([]);
         }
 
