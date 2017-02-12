@@ -1,5 +1,5 @@
 import { DefinitionProvider, TextDocument, Position, CancellationToken, Location, Uri } from "vscode";
-import { getCurrentLine, findImportPath } from "./utils";
+import { getCurrentLine, findImportPath, genImportRegExp } from "./utils";
 import * as path from "path";
 import * as fs from "fs";
 import * as _ from "lodash";
@@ -42,16 +42,7 @@ function getPosition(filePath: string, className: string): Position {
     }
 }
 
-function isImportLine(line: string): RegExpExecArray | null {
-    const variable = "(\\S+)";
-    const file = "(.+\\.\\S{1,2}ss)";
-    const fromOrRequire = "(?:from\\s+|=\\s+require\\()";
-    const requireEndOptional = "\\)?";
-    const pattern = `\\s+${variable}\\s+${fromOrRequire}['"]${file}['"]${requireEndOptional}`;
-    return new RegExp(pattern).exec(line);
-}
-
-function isValidMatches(line: string, matches: RegExpExecArray, current: number): boolean {
+function isImportLineMatch(line: string, matches: RegExpExecArray, current: number): boolean {
     if (matches === null) {
         return false;
     }
@@ -68,8 +59,8 @@ export class CSSModuleDefinitionProvider implements DefinitionProvider {
         const currentDir = path.dirname(document.uri.fsPath);
         const currentLine = getCurrentLine(document, position);
 
-        const matches = isImportLine(currentLine);
-        if (isValidMatches(currentLine, matches, position.character)) {
+        const matches = genImportRegExp("(\\S+)").exec(currentLine);
+        if (isImportLineMatch(currentLine, matches, position.character)) {
             return Promise.resolve(new Location(
                 Uri.file(path.resolve(currentDir, matches[2])),
                 new Position(0, 0)
