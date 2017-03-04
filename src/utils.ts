@@ -40,3 +40,5 @@ export function getAllClassNames(filePath: string, keyword: string): string[] {
     const uniqNames = _.uniq(classNames).map(item => item.slice(1));
     return keyword !== "" ? uniqNames.filter(item => item.indexOf(keyword) !== -1) : uniqNames;
 }
+
+export type CamelCaseValues = false | true | "dashes";
