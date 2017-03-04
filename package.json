@@ -19,6 +19,22 @@
         "onLanguage:typescriptreact",
         "onLanguage:javascriptreact"
     ],
+    "contributes": {
+        "configuration": {
+            "type": "object",
+            "title": "CSS Modules Configuration",
+            "properties": {
+                "cssModules.camelCase": {
+                    "type": [
+                        "boolean",
+                        "string"
+                    ],
+                    "default": false,
+                    "description": "Transform classnames in autocomplete suggestions."
+                }
+            }
+        }
+    },
     "main": "./out/src/extension",
     "scripts": {
         "vscode:prepublish": "tsc -p ./",

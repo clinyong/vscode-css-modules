@@ -1,10 +1,12 @@
 import { CompletionItemProvider, TextDocument, Position, CompletionItem, CompletionItemKind } from "vscode";
 import * as path from "path";
+import * as _ from "lodash";
 import {
     findImportPath,
     getAllClassNames,
-    getCurrentLine
+    getCurrentLine,
 } from "./utils";
+import { CamelCaseValues } from "./utils";
 
 // check if current character or last character is .
 function isTrigger(line: string, position: Position): boolean {
@@ -22,7 +24,29 @@ function getWords(line: string, position: Position): string {
     return text.slice(index);
 }
 
+// from css-loader's implementation
+// source: https://github.com/webpack-contrib/css-loader/blob/22f6621a175e858bb604f5ea19f9860982305f16/lib/compile-exports.js
+function dashesCamelCase(str) {
+  return str.replace(/-(\w)/g, function(match, firstLetter) {
+    return firstLetter.toUpperCase();
+  });
+}
+
 export class CSSModuleCompletionProvider implements CompletionItemProvider {
+    _classTransformer = null;
+
+    constructor(camelCaseConfig?: CamelCaseValues) {
+        switch (camelCaseConfig) {
+            case true:
+              this._classTransformer = _.camelCase;
+              break;
+            case "dashes":
+              this._classTransformer = dashesCamelCase;
+              break;
+            default: break;
+        }
+    }
+
     provideCompletionItems(document: TextDocument, position: Position): Thenable<CompletionItem[]> {
         const currentLine = getCurrentLine(document, position);
         const currentDir = path.dirname(document.uri.fsPath);
@@ -45,7 +69,13 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
 
         const classNames = getAllClassNames(importPath, field);
 
-        return Promise.resolve(classNames.map(name => new CompletionItem(name, CompletionItemKind.Variable)));
+        return Promise.resolve(classNames.map(_class => {
+            let name = _class;
+            if (!!this._classTransformer) {
+                name = this._classTransformer(name);
+            }
+            return new CompletionItem(name, CompletionItemKind.Variable);
+        }));
     }
 }
 
