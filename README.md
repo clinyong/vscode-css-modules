@@ -19,6 +19,18 @@ Search `css modules` on the [VS Code Marketplace](https://code.visualstudio.com/
 
 Currently, this extension only support React project. That means it only enable on `tsx` or `jsx` file.
 
+## Settings
+
+### CamelCase for autocomplete
+
+If you write `kebab-case` classes in css files, but want to get `camelCase` complete items, set following to true.
+
+```json
+{
+   "cssModules.camelCase": true 
+}
+```
+
 ## Feedback
 
 Feel free to submit any issues or pull request.
