@@ -23,7 +23,7 @@ export function activate(context: ExtensionContext) {
         languages.registerCompletionItemProvider(mode, new CSSModuleCompletionProvider(camelCaseConfig), ".")
     );
     context.subscriptions.push(
-        languages.registerDefinitionProvider(mode, new CSSModuleDefinitionProvider())
+        languages.registerDefinitionProvider(mode, new CSSModuleDefinitionProvider(camelCaseConfig))
     );
 }
 
