@@ -6,7 +6,7 @@ import {
     getAllClassNames,
     getCurrentLine,
 } from "./utils";
-import { CamelCaseValues } from "./utils";
+import { dashesCamelCase, CamelCaseValues } from "./utils";
 
 // check if current character or last character is .
 function isTrigger(line: string, position: Position): boolean {
@@ -22,14 +22,6 @@ function getWords(line: string, position: Position): string {
     }
 
     return text.slice(index);
-}
-
-// from css-loader's implementation
-// source: https://github.com/webpack-contrib/css-loader/blob/22f6621a175e858bb604f5ea19f9860982305f16/lib/compile-exports.js
-function dashesCamelCase(str) {
-  return str.replace(/-(\w)/g, function(match, firstLetter) {
-    return firstLetter.toUpperCase();
-  });
 }
 
 export class CSSModuleCompletionProvider implements CompletionItemProvider {

@@ -41,4 +41,12 @@ export function getAllClassNames(filePath: string, keyword: string): string[] {
     return keyword !== "" ? uniqNames.filter(item => item.indexOf(keyword) !== -1) : uniqNames;
 }
 
+// from css-loader's implementation
+// source: https://github.com/webpack-contrib/css-loader/blob/22f6621a175e858bb604f5ea19f9860982305f16/lib/compile-exports.js
+export function dashesCamelCase(str) {
+  return str.replace(/-(\w)/g, function(match, firstLetter) {
+    return firstLetter.toUpperCase();
+  });
+}
+
 export type CamelCaseValues = false | true | "dashes";
