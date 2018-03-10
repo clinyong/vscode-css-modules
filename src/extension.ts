@@ -14,7 +14,9 @@ const extName = "cssModules";
 export function activate(context: ExtensionContext) {
     const mode: DocumentFilter = [
         { language: "typescriptreact", scheme: "file" },
-        { language: "javascriptreact", scheme: "file" }
+        { language: "javascriptreact", scheme: "file" },
+        { language: "typescript", scheme: "file" },
+        { language: "javascript", scheme: "file" }
     ];
     const configuration = workspace.getConfiguration(extName);
     const camelCaseConfig: CamelCaseValues = configuration.get("camelCase", false);
