@@ -1,3 +1,7 @@
+## 0.2.3
+
+- Add support for javascript file.
+
 ## 0.2.2
 
 - Improvement to go to definition for camelCase.

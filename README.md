@@ -17,7 +17,7 @@ Search `css modules` on the [VS Code Marketplace](https://code.visualstudio.com/
 
 ## Usage
 
-Currently, this extension only support React project. That means it only enable on `tsx` or `jsx` file.
+Currently, this extension only support React project.
 
 ## Settings
 
@@ -27,7 +27,7 @@ If you write `kebab-case` classes in css files, but want to get `camelCase` comp
 
 ```json
 {
-   "cssModules.camelCase": true 
+   "cssModules.camelCase": true
 }
 ```
 
