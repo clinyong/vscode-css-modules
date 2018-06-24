@@ -12,7 +12,7 @@ import { CamelCaseValues } from "./utils";
 const extName = "cssModules";
 
 export function activate(context: ExtensionContext) {
-    const mode: DocumentFilter = [
+    const mode: DocumentFilter[] = [
         { language: "typescriptreact", scheme: "file" },
         { language: "javascriptreact", scheme: "file" },
         { language: "javascript", scheme: "file" }
