@@ -1,4 +1,4 @@
-import { CompletionItemProvider, TextDocument, Position, CompletionItem, CompletionItemKind } from "vscode";
+import { CompletionItemProvider, TextDocument, Position, CompletionItem, CompletionItemKind, workspace } from "vscode";
 import * as path from "path";
 import * as _ from "lodash";
 import {
@@ -42,6 +42,7 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
     provideCompletionItems(document: TextDocument, position: Position): Thenable<CompletionItem[]> {
         const currentLine = getCurrentLine(document, position);
         const currentDir = path.dirname(document.uri.fsPath);
+        const workspaceDir = workspace.rootPath;
 
         if (!isTrigger(currentLine, position)) {
             return Promise.resolve([]);
@@ -54,7 +55,7 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
 
         const [obj, field] = words.split(".");
 
-        const importPath = findImportPath(document.getText(), obj, currentDir);
+        const importPath = findImportPath(document.getText(), obj, currentDir, workspaceDir);
         if (importPath === "") {
             return Promise.resolve([]);
         }

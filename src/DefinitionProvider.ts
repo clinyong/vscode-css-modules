@@ -1,4 +1,4 @@
-import { DefinitionProvider, TextDocument, Position, CancellationToken, Location, Uri } from "vscode";
+import { DefinitionProvider, TextDocument, Position, CancellationToken, Location, Uri, workspace } from "vscode";
 import { getCurrentLine, findImportPath, genImportRegExp, dashesCamelCase, CamelCaseValues } from "./utils";
 import * as path from "path";
 import * as fs from "fs";
@@ -100,12 +100,14 @@ export class CSSModuleDefinitionProvider implements DefinitionProvider {
 
     public provideDefinition(document: TextDocument, position: Position, token: CancellationToken): Thenable<Location> {
         const currentDir = path.dirname(document.uri.fsPath);
+        const workspaceDir = workspace.rootPath;
         const currentLine = getCurrentLine(document, position);
 
         const matches = genImportRegExp("(\\S+)").exec(currentLine);
         if (isImportLineMatch(currentLine, matches, position.character)) {
+            const basePath = matches[2].charAt(0) === "." ? currentDir : workspaceDir;
             return Promise.resolve(new Location(
-                Uri.file(path.resolve(currentDir, matches[2])),
+                Uri.file(path.resolve(basePath, matches[2])),
                 new Position(0, 0)
             ));
         }
@@ -116,7 +118,7 @@ export class CSSModuleDefinitionProvider implements DefinitionProvider {
         }
 
         const [obj, field] = words.split(".");
-        const importPath = findImportPath(document.getText(), obj, currentDir);
+        const importPath = findImportPath(document.getText(), obj, currentDir, workspaceDir);
         if (importPath === "") {
             return Promise.resolve(null);
         }

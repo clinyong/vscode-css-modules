@@ -15,11 +15,12 @@ export function genImportRegExp(key: string ): RegExp {
     return new RegExp(pattern);
 }
 
-export function findImportPath(text: string, key: string, parentPath: string): string {
+export function findImportPath(text: string, key: string, parentPath: string, workspacePath: string): string {
     const re = genImportRegExp(key);
     const results = re.exec(text);
+    const basePath = results[1].charAt(0) === "." ? parentPath : workspacePath;
     if (!!results && results.length > 0) {
-        return path.resolve(parentPath, results[1]);
+        return path.resolve(basePath, results[1]);
     } else {
         return "";
     }
