@@ -15,15 +15,36 @@ export function genImportRegExp(key: string ): RegExp {
     return new RegExp(pattern);
 }
 
-export function findImportPath(text: string, key: string, parentPath: string, workspacePath: string): string {
+export function findImportPath(text: string, key: string, parentPath: string): string {
     const re = genImportRegExp(key);
     const results = re.exec(text);
-    const basePath = results[1].charAt(0) === "." ? parentPath : workspacePath;
-    if (!!results && results.length > 0) {
-        return path.resolve(basePath, results[1]);
-    } else {
-        return "";
-    }
+
+    if (!results || results.length === 0) return "";
+    if (results[1].charAt(0) === ".") return path.resolve(parentPath, results[1]);
+
+    const configFilePath = findConfigFilePath(parentPath);
+    if (!configFilePath) return "";
+    const rawConfigFile = fs.readFileSync(configFilePath);
+    const configFile = JSON.parse(rawConfigFile.toString());
+    const baseUrl = configFile.compilerOptions.baseUrl;
+    return path.resolve(configFilePath, "..", baseUrl, results[1]);
+}
+
+function findConfigFilePath(startPath: string): string {
+    let output: string = undefined;
+
+    const fileNames = ["jsconfig.json", "tsconfig.json"];
+    fileNames.forEach(fileName => {
+        try {
+            const filePath = path.resolve(startPath, fileName);
+            fs.accessSync(filePath, fs.constants.F_OK);
+            output = filePath;
+        } catch (err) {}
+    });
+    if (output) return output;
+
+    const parentPath = path.resolve(startPath, "..");
+    return parentPath === startPath ? "" : findConfigFilePath(parentPath);
 }
 
 export function getAllClassNames(filePath: string, keyword: string): string[] {
