@@ -32,7 +32,7 @@ export function getAllClassNames(filePath: string, keyword: string): string[] {
         return [];
     }
 
-    const classNames = lines.join(" ").match(/\.[_A-Za-z0-9\-]+/g);
+    const classNames = lines.join(" ").match(/\.[_A-Za-z0-9-]+/g);
     if (classNames === null) {
         return [];
     }

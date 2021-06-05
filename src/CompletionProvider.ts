@@ -16,7 +16,7 @@ function isTrigger(line: string, position: Position): boolean {
 
 function getWords(line: string, position: Position): string {
     const text = line.slice(0, position.character);
-    const index = text.search(/[a-zA-Z0-9\._]*$/);
+    const index = text.search(/[a-zA-Z0-9._]*$/);
     if (index === -1) {
         return "";
     }
@@ -63,7 +63,7 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
 
         return Promise.resolve(classNames.map(_class => {
             let name = _class;
-            if (!!this._classTransformer) {
+            if (this._classTransformer) {
                 name = this._classTransformer(name);
             }
             return new CompletionItem(name, CompletionItemKind.Variable);
