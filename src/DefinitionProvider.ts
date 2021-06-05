@@ -4,15 +4,17 @@ import * as path from "path";
 import * as fs from "fs";
 import * as _ from "lodash";
 
+type ClassTransformer = (cls: string) => string
+
 function getWords(line: string, position: Position): string {
     const headText = line.slice(0, position.character);
-    const startIndex = headText.search(/[a-zA-Z0-9\._]*$/);
+    const startIndex = headText.search(/[a-zA-Z0-9._]*$/);
     // not found or not clicking object field
     if (startIndex === -1 || headText.slice(startIndex).indexOf(".") === -1) {
         return "";
     }
 
-    const match = /^([a-zA-Z0-9\._]*)/.exec(line.slice(startIndex));
+    const match = /^([a-zA-Z0-9._]*)/.exec(line.slice(startIndex));
     if (match === null) {
         return "";
     }
@@ -20,7 +22,7 @@ function getWords(line: string, position: Position): string {
     return match[1];
 }
 
-function getTransformer(camelCaseConfig: CamelCaseValues): Function {
+function getTransformer(camelCaseConfig: CamelCaseValues): ClassTransformer | null {
     switch (camelCaseConfig) {
         case true:
             return _.camelCase;
