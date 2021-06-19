@@ -8,7 +8,7 @@ export function getCurrentLine(document: TextDocument, position: Position): stri
 }
 
 export function genImportRegExp(key: string ): RegExp {
-    const file = "(.+\\.\\S{1,2}ss)";
+    const file = "(.+\\.(\\S{1,2}ss|styl))";
     const fromOrRequire = "(?:from\\s+|=\\s+require(?:<any>)?\\()";
     const requireEndOptional = "\\)?";
     const pattern = `${key}\\s+${fromOrRequire}["']${file}["']${requireEndOptional}`;
