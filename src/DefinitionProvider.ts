@@ -107,7 +107,7 @@ export class CSSModuleDefinitionProvider implements DefinitionProvider {
         const matches = genImportRegExp("(\\S+)").exec(currentLine);
         if (isImportLineMatch(currentLine, matches, position.character)) {
             return Promise.resolve(new Location(
-                Uri.file(path.resolve(currentDir, matches[2])),
+                Uri.file(findImportPath(document.getText(), "", currentDir)),
                 new Position(0, 0)
             ));
         }
