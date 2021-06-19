@@ -2,14 +2,15 @@ import * as assert from "assert";
 import * as vscode from "vscode";
 
 import { CSSModuleDefinitionProvider } from "../../DefinitionProvider";
-import { CamelCaseValues } from "../../utils";
+import { CamelCaseValues } from "../../options";
 import { SAMPLE_JS_FILE } from "../constant";
+import { readOptions } from "../utils";
 
 const uri = vscode.Uri.file(SAMPLE_JS_FILE);
 
 function testDefinition(position: vscode.Position) {
     return vscode.workspace.openTextDocument(uri).then((text) => {
-        const provider = new CSSModuleDefinitionProvider();
+        const provider = new CSSModuleDefinitionProvider(readOptions());
         return provider
             .provideDefinition(text, position, undefined)
             .then((location) => {
@@ -25,7 +26,9 @@ function testDefinitionWithCase(
     assertions: Array<any>
 ) {
     return vscode.workspace.openTextDocument(uri).then((text) => {
-        const provider = new CSSModuleDefinitionProvider(camelCaseConfig);
+        const provider = new CSSModuleDefinitionProvider(readOptions({
+            camelCase: camelCaseConfig
+        }));
         return provider
             .provideDefinition(text, position, undefined)
             .then((location) => {
