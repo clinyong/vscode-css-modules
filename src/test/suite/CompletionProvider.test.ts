@@ -2,14 +2,15 @@ import * as assert from "assert";
 import * as vscode from "vscode";
 
 import { CSSModuleCompletionProvider } from "../../CompletionProvider";
-import { CamelCaseValues } from "../../utils";
+import { CamelCaseValues } from "../../options";
 import { SAMPLE_JS_FILE } from "../constant";
+import { readOptions } from "../utils";
 
 const uri = vscode.Uri.file(SAMPLE_JS_FILE);
 
 function testCompletion(position: vscode.Position) {
     return vscode.workspace.openTextDocument(uri).then((text) => {
-        const provider = new CSSModuleCompletionProvider();
+        const provider = new CSSModuleCompletionProvider(readOptions());
         return provider.provideCompletionItems(text, position).then((items) => {
             assert.equal(5, items.length);
         });
@@ -22,7 +23,9 @@ function testCompletionWithCase(
     assertions: Array<any>
 ) {
     return vscode.workspace.openTextDocument(uri).then((text) => {
-        const provider = new CSSModuleCompletionProvider(camelCaseConfig);
+        const provider = new CSSModuleCompletionProvider(readOptions({
+            camelCase: camelCaseConfig
+        }));
         return provider.provideCompletionItems(text, position).then((items) => {
             assertions.map((assertion) => assertion(items));
         });

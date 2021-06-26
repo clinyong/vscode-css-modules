@@ -1,5 +1,7 @@
 import { DefinitionProvider, TextDocument, Position, CancellationToken, Location, Uri } from "vscode";
-import { getCurrentLine, findImportPath, genImportRegExp, dashesCamelCase, CamelCaseValues } from "./utils";
+import { getCurrentLine, dashesCamelCase } from "./utils";
+import { findImportPath, genImportRegExp, replaceWorkspaceFolder } from "./utils/path";
+import {  CamelCaseValues, ExtensionOptions, PathAlias } from "./options";
 import * as path from "path";
 import * as fs from "fs";
 import * as _ from "lodash";
@@ -95,12 +97,14 @@ function isImportLineMatch(line: string, matches: RegExpExecArray, current: numb
 
 export class CSSModuleDefinitionProvider implements DefinitionProvider {
     _camelCaseConfig: CamelCaseValues = false;
+    pathAlias: PathAlias
 
-    constructor(camelCaseConfig?: CamelCaseValues) {
-        this._camelCaseConfig = camelCaseConfig;
+    constructor(options: ExtensionOptions) {
+        this._camelCaseConfig = options.camelCase;
+        this.pathAlias = options.pathAlias
     }
 
-    public provideDefinition(document: TextDocument, position: Position, token: CancellationToken): Thenable<Location> {
+    public async provideDefinition(document: TextDocument, position: Position, token: CancellationToken): Promise<Location> {
         const currentDir = path.dirname(document.uri.fsPath);
         const currentLine = getCurrentLine(document, position);
 
@@ -118,7 +122,7 @@ export class CSSModuleDefinitionProvider implements DefinitionProvider {
         }
 
         const [obj, field] = words.split(".");
-        const importPath = findImportPath(document.getText(), obj, currentDir);
+        const importPath = await findImportPath(document.getText(), obj, currentDir, replaceWorkspaceFolder(this.pathAlias, document));
         if (importPath === "") {
             return Promise.resolve(null);
         }

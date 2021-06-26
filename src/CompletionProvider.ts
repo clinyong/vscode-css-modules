@@ -2,11 +2,12 @@ import { CompletionItemProvider, TextDocument, Position, CompletionItem, Complet
 import * as path from "path";
 import * as _ from "lodash";
 import {
-    findImportPath,
     getAllClassNames,
     getCurrentLine,
+    dashesCamelCase
 } from "./utils";
-import { dashesCamelCase, CamelCaseValues } from "./utils";
+import { findImportPath, replaceWorkspaceFolder } from "./utils/path";
+import { ExtensionOptions, PathAlias } from "./options";
 
 // check if current character or last character is .
 function isTrigger(line: string, position: Position): boolean {
@@ -26,9 +27,10 @@ function getWords(line: string, position: Position): string {
 
 export class CSSModuleCompletionProvider implements CompletionItemProvider {
     _classTransformer = null;
+    pathAlias: PathAlias
 
-    constructor(camelCaseConfig?: CamelCaseValues) {
-        switch (camelCaseConfig) {
+    constructor(options: ExtensionOptions) {
+        switch (options.camelCase) {
             case true:
               this._classTransformer = _.camelCase;
               break;
@@ -37,9 +39,11 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
               break;
             default: break;
         }
+
+        this.pathAlias = options.pathAlias
     }
 
-    provideCompletionItems(document: TextDocument, position: Position): Thenable<CompletionItem[]> {
+    async provideCompletionItems(document: TextDocument, position: Position): Promise<CompletionItem[]> {
         const currentLine = getCurrentLine(document, position);
         const currentDir = path.dirname(document.uri.fsPath);
 
@@ -54,7 +58,7 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
 
         const [obj, field] = words.split(".");
 
-        const importPath = findImportPath(document.getText(), obj, currentDir);
+        const importPath = await findImportPath(document.getText(), obj, currentDir, replaceWorkspaceFolder(this.pathAlias, document));
         if (importPath === "") {
             return Promise.resolve([]);
         }
