@@ -1,14 +1,14 @@
 import { ExtensionOptions } from "../options";
 
 export function readOptions(
-    overrides: Partial<ExtensionOptions> = {}
+  overrides: Partial<ExtensionOptions> = {}
 ): ExtensionOptions {
-    return Object.assign(
-        {},
-        {
-            camelCase: false,
-            pathAlias: {},
-        },
-        overrides
-    );
+  return Object.assign(
+    {},
+    {
+      camelCase: false,
+      pathAlias: {},
+    },
+    overrides
+  );
 }
