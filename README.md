@@ -1,6 +1,6 @@
 # VSCode CSS Modules
 
-[![Github Actions](https://github.com/ichenlei/vscode-css-modules/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/clinyong/vscode-css-modules/actions)
+[![Github Actions](https://github.com/clinyong/vscode-css-modules/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/clinyong/vscode-css-modules/actions)
 
 Extension for [CSS Modules](https://github.com/css-modules/css-modules), which supports
 
