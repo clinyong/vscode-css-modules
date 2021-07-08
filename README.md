@@ -1,6 +1,6 @@
 # VSCode CSS Modules
 
-[![Build Status](https://travis-ci.org/clinyong/vscode-css-modules.svg?branch=master)](https://travis-ci.org/clinyong/vscode-css-modules)
+[![Github Actions](https://github.com/ichenlei/vscode-css-modules/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/clinyong/vscode-css-modules/actions)
 
 Extension for [CSS Modules](https://github.com/css-modules/css-modules), which supports
 
@@ -27,7 +27,7 @@ If you write `kebab-case` classes in css files, but want to get `camelCase` comp
 
 ```json
 {
-   "cssModules.camelCase": true
+  "cssModules.camelCase": true
 }
 ```
 

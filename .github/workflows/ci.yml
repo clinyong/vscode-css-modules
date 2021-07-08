@@ -1,0 +1,16 @@
+# Github actions workflow name
+name: VSCode Test
+
+# Triggers the workflow on push or pull request events
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v2
+        with:
+         node-version: '14'
+         cache: 'yarn'
+      - run: yarn install
+      - run: yarn test
