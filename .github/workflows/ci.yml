@@ -5,8 +5,8 @@ name: VSCode Test
 on: [push, pull_request]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  VSCode Test:
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
         with:
