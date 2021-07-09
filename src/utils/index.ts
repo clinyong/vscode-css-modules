@@ -9,8 +9,8 @@ export function getCurrentLine(
   return document.getText(document.lineAt(position).range);
 }
 
-export function getAllClassNames(filePath: string, keyword: string): string[] {
-  const content = fse.readFileSync(filePath, { encoding: "utf8" });
+export async function getAllClassNames(filePath: string, keyword: string): Promise<string[]> {
+  const content = await fse.readFile(filePath, { encoding: "utf8" });
   const lines = content.match(/.*[,{]/g);
   if (lines === null) {
     return [];

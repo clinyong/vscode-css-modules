@@ -74,7 +74,7 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
       return Promise.resolve([]);
     }
 
-    const classNames = getAllClassNames(importPath, field);
+    const classNames = await getAllClassNames(importPath, field);
 
     return Promise.resolve(
       classNames.map((_class) => {
