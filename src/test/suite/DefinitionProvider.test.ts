@@ -15,7 +15,7 @@ function testDefinition(position: vscode.Position) {
       .provideDefinition(text, position, undefined)
       .then((location) => {
         const { line, character } = location.range.start;
-        assert.equal(true, line === 2 && character === 1);
+        assert.strictEqual(true, line === 2 && character === 1);
       });
   });
 }
@@ -68,7 +68,7 @@ test("test camelCase:true style completion", () => {
   return Promise.resolve(
     testDefinitionWithCase(position, true, [
       (position?: vscode.Position) =>
-        assert.equal(true, position.line === 4 && position.character === 1),
+        assert.strictEqual(true, position.line === 4 && position.character === 1),
     ])
   ).catch((err) => assert.ok(false, `error in OpenTextDocument ${err}`));
 });
@@ -78,7 +78,7 @@ test("test camelCase:dashes style completion", () => {
   return Promise.resolve(
     testDefinitionWithCase(position, "dashes", [
       (position?: vscode.Position) =>
-        assert.equal(true, position.line === 4 && position.character === 1),
+        assert.strictEqual(true, position.line === 4 && position.character === 1),
     ])
   ).catch((err) => assert.ok(false, `error in OpenTextDocument ${err}`));
 });
