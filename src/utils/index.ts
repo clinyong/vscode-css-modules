@@ -29,7 +29,7 @@ export function getAllClassNames(filePath: string, keyword: string): string[] {
 
 // from css-loader's implementation
 // source: https://github.com/webpack-contrib/css-loader/blob/22f6621a175e858bb604f5ea19f9860982305f16/lib/compile-exports.js
-export function dashesCamelCase(str) {
+export function dashesCamelCase(str: string): string {
   return str.replace(/-(\w)/g, function (match, firstLetter) {
     return firstLetter.toUpperCase();
   });

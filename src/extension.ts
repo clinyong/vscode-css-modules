@@ -4,7 +4,7 @@ import { CSSModuleCompletionProvider } from "./CompletionProvider";
 import { CSSModuleDefinitionProvider } from "./DefinitionProvider";
 import { readOptions } from "./options";
 
-export function activate(context: ExtensionContext) {
+export function activate(context: ExtensionContext): void {
   const mode: DocumentFilter[] = [
     { language: "typescriptreact", scheme: "file" },
     { language: "javascriptreact", scheme: "file" },
@@ -26,4 +26,4 @@ export function activate(context: ExtensionContext) {
   );
 }
 
-export function deactivate() {}
+export function deactivate(): void {}
