@@ -8,7 +8,7 @@ import {
 import * as path from "path";
 import * as _ from "lodash";
 import { getAllClassNames, getCurrentLine, dashesCamelCase } from "./utils";
-import { findImportPath, replaceWorkspaceFolder } from "./utils/path";
+import { findImportModule, replaceWorkspaceFolder, resolveImportPath } from "./utils/path";
 import { ExtensionOptions, PathAlias } from "./options";
 
 // check if current character or last character is .
@@ -64,9 +64,9 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
 
     const [obj, field] = words.split(".");
 
-    const importPath = await findImportPath(
-      document.getText(),
-      obj,
+    const importModule = findImportModule(document.getText(), obj);
+    const importPath = await resolveImportPath(
+      importModule,
       currentDir,
       replaceWorkspaceFolder(this.pathAlias, document)
     );

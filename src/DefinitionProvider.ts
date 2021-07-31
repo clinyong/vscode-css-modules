@@ -8,9 +8,10 @@ import {
 } from "vscode";
 import { getCurrentLine, dashesCamelCase } from "./utils";
 import {
-  findImportPath,
+  findImportModule,
   genImportRegExp,
   replaceWorkspaceFolder,
+  resolveImportPath,
 } from "./utils/path";
 import { CamelCaseValues, ExtensionOptions, PathAlias } from "./options";
 import * as path from "path";
@@ -18,6 +19,16 @@ import * as fs from "fs";
 import * as _ from "lodash";
 
 type ClassTransformer = (cls: string) => string;
+
+interface ClickInfo {
+  importModule: string;
+  targetClass: string;
+}
+
+interface Keyword {
+  obj: string;
+  field: string;
+}
 
 function getWords(line: string, position: Position): string {
   const headText = line.slice(0, position.character);
@@ -123,6 +134,50 @@ function isImportLineMatch(
   );
 }
 
+function getKeyword(currentLine: string, position: Position): Keyword | null {
+  const words = getWords(currentLine, position);
+  if (words === "" || words.indexOf(".") === -1) {
+    return null;
+  }
+
+  const [obj, field] = words.split(".");
+  return { obj, field };
+}
+
+function getClickInfoByKeyword(
+  document: TextDocument,
+  currentLine: string,
+  position: Position
+): ClickInfo | null {
+  const keyword = getKeyword(currentLine, position);
+  if (!keyword) {
+    return null;
+  }
+
+  const importModule = findImportModule(document.getText(), keyword.obj);
+  const targetClass = keyword.field;
+  return {
+    importModule,
+    targetClass,
+  };
+}
+
+function getClickInfo(
+  document: TextDocument,
+  currentLine: string,
+  position: Position
+): ClickInfo | null {
+  const matches = genImportRegExp("(\\S+)").exec(currentLine);
+  if (isImportLineMatch(currentLine, matches, position.character)) {
+    return {
+      importModule: matches[2],
+      targetClass: "",
+    };
+  }
+
+  return getClickInfoByKeyword(document, currentLine, position);
+}
+
 export class CSSModuleDefinitionProvider implements DefinitionProvider {
   _camelCaseConfig: CamelCaseValues = false;
   pathAlias: PathAlias;
@@ -140,25 +195,13 @@ export class CSSModuleDefinitionProvider implements DefinitionProvider {
     const currentDir = path.dirname(document.uri.fsPath);
     const currentLine = getCurrentLine(document, position);
 
-    const matches = genImportRegExp("(\\S+)").exec(currentLine);
-    if (isImportLineMatch(currentLine, matches, position.character)) {
-      return Promise.resolve(
-        new Location(
-          Uri.file(path.resolve(currentDir, matches[2])),
-          new Position(0, 0)
-        )
-      );
-    }
-
-    const words = getWords(currentLine, position);
-    if (words === "" || words.indexOf(".") === -1) {
+    const clickInfo = getClickInfo(document, currentLine, position);
+    if (!clickInfo) {
       return Promise.resolve(null);
     }
 
-    const [obj, field] = words.split(".");
-    const importPath = await findImportPath(
-      document.getText(),
-      obj,
+    const importPath = await resolveImportPath(
+      clickInfo.importModule,
       currentDir,
       replaceWorkspaceFolder(this.pathAlias, document)
     );
@@ -166,11 +209,16 @@ export class CSSModuleDefinitionProvider implements DefinitionProvider {
       return Promise.resolve(null);
     }
 
-    const targetPosition = getPosition(
-      importPath,
-      field,
-      this._camelCaseConfig
-    );
+    let targetPosition: Position | null = null;
+    if (clickInfo.targetClass) {
+      targetPosition = getPosition(
+        importPath,
+        clickInfo.targetClass,
+        this._camelCaseConfig
+      );
+    } else {
+      targetPosition = new Position(0, 0);
+    }
 
     if (targetPosition === null) {
       return Promise.resolve(null);

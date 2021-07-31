@@ -42,16 +42,11 @@ export async function resolveImportPath(
   return "";
 }
 
-export async function findImportPath(
-  text: string,
-  key: string,
-  parentPath: string,
-  pathAlias: PathAlias
-): Promise<string> {
+export function findImportModule(text: string, key: string): string {
   const re = genImportRegExp(key);
   const results = re.exec(text);
   if (!!results && results.length > 0) {
-    return resolveImportPath(results[1], parentPath, pathAlias);
+    return results[1];
   } else {
     return "";
   }
