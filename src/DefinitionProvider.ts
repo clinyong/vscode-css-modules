@@ -10,13 +10,13 @@ import { getCurrentLine, dashesCamelCase } from "./utils";
 import {
   findImportModule,
   genImportRegExp,
-  replaceWorkspaceFolder,
   resolveImportPath,
 } from "./utils/path";
 import { CamelCaseValues, ExtensionOptions, PathAlias } from "./options";
 import * as path from "path";
 import * as fs from "fs";
 import * as _ from "lodash";
+import { getRealPathAlias } from "./path-alias";
 
 type ClassTransformer = (cls: string) => string;
 
@@ -180,11 +180,11 @@ function getClickInfo(
 
 export class CSSModuleDefinitionProvider implements DefinitionProvider {
   _camelCaseConfig: CamelCaseValues = false;
-  pathAlias: PathAlias;
+  pathAliasOptions: PathAlias;
 
   constructor(options: ExtensionOptions) {
     this._camelCaseConfig = options.camelCase;
-    this.pathAlias = options.pathAlias;
+    this.pathAliasOptions = options.pathAlias;
   }
 
   public async provideDefinition(
@@ -203,7 +203,7 @@ export class CSSModuleDefinitionProvider implements DefinitionProvider {
     const importPath = await resolveImportPath(
       clickInfo.importModule,
       currentDir,
-      replaceWorkspaceFolder(this.pathAlias, document)
+      await getRealPathAlias(this.pathAliasOptions, document)
     );
     if (importPath === "") {
       return Promise.resolve(null);

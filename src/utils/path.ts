@@ -1,8 +1,6 @@
 import * as path from "path";
 import * as fse from "fs-extra";
 import { PathAlias } from "../options";
-import { TextDocument, workspace, WorkspaceEdit } from "vscode";
-import { WORKSPACE_FOLDER_VARIABLE } from "../constants";
 
 export function genImportRegExp(key: string): RegExp {
   const file = "(.+\\.\\S{1,2}ss)";
@@ -49,46 +47,5 @@ export function findImportModule(text: string, key: string): string {
     return results[1];
   } else {
     return "";
-  }
-}
-
-export function replaceWorkspaceFolderWithRootPath(
-  pathAlias: PathAlias,
-  rootPath: string
-): PathAlias {
-  const newAlias: PathAlias = {};
-  for (const key in pathAlias) {
-    newAlias[key] = pathAlias[key].replace(WORKSPACE_FOLDER_VARIABLE, rootPath);
-  }
-
-  return newAlias;
-}
-
-export function valueContainsWorkspaceFolder(value: string): boolean {
-  return value.indexOf(WORKSPACE_FOLDER_VARIABLE) >= 0;
-}
-
-export function filterWorkspaceFolderAlias(pathAlias: PathAlias): PathAlias {
-  const newAlias: PathAlias = {};
-  for (const key in pathAlias) {
-    if (!valueContainsWorkspaceFolder(pathAlias[key])) {
-      newAlias[key] = pathAlias[key];
-    }
-  }
-  return newAlias;
-}
-
-export function replaceWorkspaceFolder(
-  pathAlias: PathAlias,
-  doc: TextDocument
-): PathAlias {
-  const workspaceFolder = workspace.getWorkspaceFolder(doc.uri);
-  if (workspaceFolder) {
-    return replaceWorkspaceFolderWithRootPath(
-      pathAlias,
-      workspaceFolder.uri.path
-    );
-  } else {
-    return filterWorkspaceFolderAlias(pathAlias);
   }
 }
