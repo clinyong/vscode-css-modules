@@ -3,6 +3,7 @@ import { languages, ExtensionContext, DocumentFilter } from "vscode";
 import { CSSModuleCompletionProvider } from "./CompletionProvider";
 import { CSSModuleDefinitionProvider } from "./DefinitionProvider";
 import { readOptions } from "./options";
+import { subscribeToTsConfigChanges } from "./utils/tsconfig";
 
 export function activate(context: ExtensionContext): void {
   const mode: DocumentFilter[] = [
@@ -24,6 +25,11 @@ export function activate(context: ExtensionContext): void {
       new CSSModuleDefinitionProvider(options)
     )
   );
+
+  /**
+   * Subscribe to the ts config changes
+   */
+  context.subscriptions.push(...subscribeToTsConfigChanges());
 }
 
 export function deactivate(): void {}
