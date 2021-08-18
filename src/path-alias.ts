@@ -1,14 +1,14 @@
 import * as vscode from "vscode";
 import { WORKSPACE_FOLDER_VARIABLE } from "./constants";
-import { PathAlias } from "./options";
-import { getTsAlias } from "./utils/tsconfig";
+import { AliasFromUserOptions, PathAlias } from "./options";
+import { getTsAlias } from "./utils/ts-alias";
 
 function valueContainsWorkspaceFolder(value: string): boolean {
   return value.indexOf(WORKSPACE_FOLDER_VARIABLE) >= 0;
 }
 
-function filterWorkspaceFolderAlias(pathAlias: PathAlias): PathAlias {
-  const newAlias: PathAlias = {};
+function filterWorkspaceFolderAlias(pathAlias: AliasFromUserOptions): AliasFromUserOptions {
+  const newAlias: AliasFromUserOptions = {};
   for (const key in pathAlias) {
     if (!valueContainsWorkspaceFolder(pathAlias[key])) {
       newAlias[key] = pathAlias[key];
@@ -21,22 +21,30 @@ function replaceWorkspaceFolderWithRootPath(
   pathAlias: PathAlias,
   rootPath: string
 ): PathAlias {
+  function replaceAlias(alias: string) {
+    return alias.replace(WORKSPACE_FOLDER_VARIABLE, rootPath);
+  }
+
   const newAlias: PathAlias = {};
   for (const key in pathAlias) {
-    newAlias[key] = pathAlias[key].replace(WORKSPACE_FOLDER_VARIABLE, rootPath);
+    const aliasValue = pathAlias[key];
+    newAlias[key] = Array.isArray(aliasValue)
+      ? aliasValue.map(replaceAlias)
+      : replaceAlias(aliasValue);
   }
 
   return newAlias;
 }
 
 export async function getRealPathAlias(
-  pathAliasOptions: PathAlias,
+  pathAliasOptions: AliasFromUserOptions,
   doc: vscode.TextDocument
 ): Promise<PathAlias> {
   const workspaceFolder = vscode.workspace.getWorkspaceFolder(doc.uri);
   if (workspaceFolder) {
     const tsAlias = await getTsAlias(workspaceFolder);
-    const alias = Object.assign({}, tsAlias, pathAliasOptions);
+    // Alias from extension option has higher priority.
+    const alias: PathAlias = Object.assign({}, tsAlias, pathAliasOptions);
 
     return replaceWorkspaceFolderWithRootPath(alias, workspaceFolder.uri.path);
   } else {

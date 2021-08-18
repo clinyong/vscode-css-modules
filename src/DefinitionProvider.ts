@@ -12,7 +12,7 @@ import {
   genImportRegExp,
   resolveImportPath,
 } from "./utils/path";
-import { CamelCaseValues, ExtensionOptions, PathAlias } from "./options";
+import { AliasFromUserOptions, CamelCaseValues, ExtensionOptions } from "./options";
 import * as path from "path";
 import * as fs from "fs";
 import * as _ from "lodash";
@@ -180,7 +180,7 @@ function getClickInfo(
 
 export class CSSModuleDefinitionProvider implements DefinitionProvider {
   _camelCaseConfig: CamelCaseValues = false;
-  pathAliasOptions: PathAlias;
+  pathAliasOptions: AliasFromUserOptions;
 
   constructor(options: ExtensionOptions) {
     this._camelCaseConfig = options.camelCase;

@@ -44,18 +44,21 @@ Create aliases to import or require modules. (In combination with webpack resolv
 }
 ```
 
-If there is a jsconfig or tsconfig in your project, the `compilerOptions.baseUrl` will become an alias. For example
+If there is a jsconfig or tsconfig in your project, the `compilerOptions.paths` will become aliases. For example
 
 ```json
 {
-  "baseUrl": "./src"
+  "baseUrl": "./src",
+  "paths": {
+    "@styles1/*": "styles1/*"
+  }
 }
 ```
 
 would allow to type
 
 ```js
-import * as styles1 from "src/styles1/demo.css";
+import * as styles1 from "@styles1/demo.css";
 ```
 
 ## Feedback

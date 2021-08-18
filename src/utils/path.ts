@@ -2,6 +2,15 @@ import * as path from "path";
 import * as fse from "fs-extra";
 import { PathAlias } from "../options";
 
+function isPathExist(p: string): Promise<boolean> {
+  return (
+    fse
+      .pathExists(p)
+      // ignore error
+      .catch(() => false)
+  );
+}
+
 export function genImportRegExp(key: string): RegExp {
   const file = "(.+\\.\\S{1,2}ss)";
   const fromOrRequire = "(?:from\\s+|=\\s+require(?:<any>)?\\()";
@@ -10,13 +19,23 @@ export function genImportRegExp(key: string): RegExp {
   return new RegExp(pattern);
 }
 
-export function resolveAliasPath(
+async function resolveAliasPath(
   moduleName: string,
   aliasPrefix: string,
-  aliasPath: string
-): string {
-  const replacedModuleName = moduleName.replace(aliasPrefix + "/", "");
-  return path.resolve(aliasPath, replacedModuleName);
+  aliasPath: string | string[]
+): Promise<string> {
+  const prefix = aliasPrefix.endsWith("/") ? aliasPrefix : aliasPrefix + "/";
+  const replacedModuleName = moduleName.replace(prefix, "");
+
+  const paths = typeof aliasPath === "string" ? [aliasPath] : aliasPath;
+  for (let i = 0; i < paths.length; i++) {
+    const targetPath = path.resolve(paths[i], replacedModuleName);
+    if (await isPathExist(targetPath)) {
+      return targetPath;
+    }
+  }
+
+  return "";
 }
 
 export async function resolveImportPath(
@@ -25,7 +44,7 @@ export async function resolveImportPath(
   pathAlias: PathAlias
 ): Promise<string> {
   const realPath = path.resolve(currentDirPath, moduleName);
-  if (await fse.pathExists(realPath)) {
+  if (await isPathExist(realPath)) {
     return realPath;
   }
 

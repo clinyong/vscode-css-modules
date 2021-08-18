@@ -3,7 +3,7 @@ import { languages, ExtensionContext, DocumentFilter } from "vscode";
 import { CSSModuleCompletionProvider } from "./CompletionProvider";
 import { CSSModuleDefinitionProvider } from "./DefinitionProvider";
 import { readOptions } from "./options";
-import { subscribeToTsConfigChanges } from "./utils/tsconfig";
+import { subscribeToTsConfigChanges } from "./utils/ts-alias";
 
 export function activate(context: ExtensionContext): void {
   const mode: DocumentFilter[] = [
