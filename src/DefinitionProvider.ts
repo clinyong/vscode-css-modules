@@ -75,6 +75,7 @@ function getPosition(
     // is false or 'dashes'
     keyWord = `.${className}`;
   }
+  const keyWordMatchReg = new RegExp(`${keyWord}\\s?(?:{|$)`) // like: '.form {' / '.form\n'
 
   for (let i = 0; i < lines.length; i++) {
     const originalLine = lines[i];
@@ -94,15 +95,17 @@ function getPosition(
     const line = !classTransformer
       ? originalLine
       : classTransformer(originalLine);
+    let isMatchChar = keyWordMatchReg.test(line);
     character = line.indexOf(keyWord);
-
-    if (character === -1 && !!classTransformer) {
+    if(character !== -1) console.log(line);
+    if (!isMatchChar && !!classTransformer) {
       // if camelized match fails, and transformer is there
       // try matching the un-camelized classnames too!
       character = originalLine.indexOf(keyWord);
+      isMatchChar = keyWordMatchReg.test(originalLine);
     }
 
-    if (character !== -1) {
+    if (isMatchChar) {
       lineNumber = i;
       break;
     }
