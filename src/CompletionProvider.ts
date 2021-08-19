@@ -8,8 +8,9 @@ import {
 import * as path from "path";
 import * as _ from "lodash";
 import { getAllClassNames, getCurrentLine, dashesCamelCase } from "./utils";
-import { findImportModule, replaceWorkspaceFolder, resolveImportPath } from "./utils/path";
-import { ExtensionOptions, PathAlias } from "./options";
+import { findImportModule, resolveImportPath } from "./utils/path";
+import { AliasFromUserOptions, ExtensionOptions } from "./options";
+import { getRealPathAlias } from "./path-alias";
 
 // check if current character or last character is .
 function isTrigger(line: string, position: Position): boolean {
@@ -29,7 +30,7 @@ function getWords(line: string, position: Position): string {
 
 export class CSSModuleCompletionProvider implements CompletionItemProvider {
   _classTransformer = null;
-  pathAlias: PathAlias;
+  pathAliasOptions: AliasFromUserOptions;
 
   constructor(options: ExtensionOptions) {
     switch (options.camelCase) {
@@ -43,7 +44,7 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
         break;
     }
 
-    this.pathAlias = options.pathAlias;
+    this.pathAliasOptions = options.pathAlias;
   }
 
   async provideCompletionItems(
@@ -68,7 +69,7 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
     const importPath = await resolveImportPath(
       importModule,
       currentDir,
-      replaceWorkspaceFolder(this.pathAlias, document)
+      await getRealPathAlias(this.pathAliasOptions, document)
     );
     if (importPath === "") {
       return Promise.resolve([]);

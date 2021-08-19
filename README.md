@@ -35,6 +35,36 @@ If you write `kebab-case` classes in css files, but want to get `camelCase` comp
 }
 ```
 
+### Path Alias
+
+Create aliases to import or require modules. (In combination with webpack resolve options.)
+
+```json
+{
+  "cssModules.pathAlias": {
+    "@styles1": "${workspaceFolder}/src/styles1",
+    "styles2": "${workspaceFolder}/src/styles2"
+  }
+}
+```
+
+If there is a jsconfig or tsconfig in your project, the `compilerOptions.paths` will become aliases. For example
+
+```json
+{
+  "baseUrl": "./src",
+  "paths": {
+    "@styles1/*": "styles1/*"
+  }
+}
+```
+
+would allow to type
+
+```js
+import * as styles1 from "@styles1/demo.css";
+```
+
 ## Feedback
 
 Feel free to submit any issues or pull request.
