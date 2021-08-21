@@ -1,10 +1,9 @@
 # VSCode CSS Modules
 
-[![Github Actions](https://github.com/clinyong/vscode-css-modules/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/clinyong/vscode-css-modules/actions)
+[![Github Actions](https://github.com/clinyong/vscode-css-modules/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/clinyong/vscode-css-modules/actions)
 [![VSCode Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/clinyong.vscode-css-modules)](https://marketplace.visualstudio.com/items?itemName=clinyong.vscode-css-modules)
 [![VSCode Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/i/clinyong.vscode-css-modules)](https://marketplace.visualstudio.com/items?itemName=clinyong.vscode-css-modules)
 [![VSCode Marketplace Stars](https://img.shields.io/visual-studio-marketplace/r/clinyong.vscode-css-modules)](https://marketplace.visualstudio.com/items?itemName=clinyong.vscode-css-modules)
-
 
 Extension for [CSS Modules](https://github.com/css-modules/css-modules), which supports
 
