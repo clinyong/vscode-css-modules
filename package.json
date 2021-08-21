@@ -2,7 +2,7 @@
     "name": "vscode-css-modules",
     "displayName": "CSS Modules",
     "description": "Visual Studio Code extension for CSS Modules",
-    "version": "0.2.3",
+    "version": "0.3.0",
     "publisher": "clinyong",
     "engines": {
         "vscode": "^1.56.0"
