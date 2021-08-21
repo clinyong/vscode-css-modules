@@ -1,3 +1,7 @@
+## 0.3.0
+
+- Support path alias. Big thanks to [@iChenLei](https://github.com/iChenLei).
+
 ## 0.2.3
 
 - Add support for javascript file.
