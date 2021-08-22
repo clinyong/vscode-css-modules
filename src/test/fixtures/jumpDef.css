@@ -1,0 +1,16 @@
+.classnameSuffixOne {
+  color: red;
+}
+.classnameSuffixTwo {
+  color: black;
+}
+/** jump to here **/
+.classname {
+  color: yellow;
+}
+.classnameSuffix {
+  color: yellow;
+}
+.class {
+  color: beige;
+}

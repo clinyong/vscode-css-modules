@@ -75,7 +75,17 @@ function getPosition(
     // is false or 'dashes'
     keyWord = `.${className}`;
   }
-  const keyWordMatchReg = new RegExp(`${keyWord}\\s?(?:{|$)`) // like: '.form {' / '.form\n'
+
+  /**
+   * This is a simple solution for definition match.
+   * Only guarantee keyword not follow character other than white space
+   * /.classname\s/ match classname and not match classnameSuffix
+   * Attention: we don't handling the dot at keyword string
+   * so the final regexp is /- AnyCharExceptNewLine - classname - Whitespace -/
+   * 
+   * @TODO Refact by new tokenizer later
+   */
+  const keyWordMatchReg = new RegExp(`${keyWord}\\s`);
 
   for (let i = 0; i < lines.length; i++) {
     const originalLine = lines[i];
@@ -95,17 +105,22 @@ function getPosition(
     const line = !classTransformer
       ? originalLine
       : classTransformer(originalLine);
-    let isMatchChar = keyWordMatchReg.test(line);
+    /**
+     * add ' ' string to fix
+     * https://github.com/clinyong/vscode-css-modules/pull/41#issuecomment-903276100
+     * 
+     * @TODO remove line + " " when we use new tokenizer to scan css className
+     */
+    let isMatchChar = keyWordMatchReg.test(line + " ");
     character = line.indexOf(keyWord);
-    if(character !== -1) console.log(line);
-    if (!isMatchChar && !!classTransformer) {
+    if (character === -1 && !!classTransformer) {
       // if camelized match fails, and transformer is there
       // try matching the un-camelized classnames too!
       character = originalLine.indexOf(keyWord);
       isMatchChar = keyWordMatchReg.test(originalLine);
     }
 
-    if (isMatchChar) {
+    if (isMatchChar && character !== -1) {
       lineNumber = i;
       break;
     }

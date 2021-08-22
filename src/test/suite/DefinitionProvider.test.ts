@@ -3,10 +3,11 @@ import * as vscode from "vscode";
 
 import { CSSModuleDefinitionProvider } from "../../DefinitionProvider";
 import { CamelCaseValues } from "../../options";
-import { SAMPLE_JS_FILE } from "../constant";
+import { JUMP_PRECISE_DEF_FILE, SAMPLE_JS_FILE } from "../constant";
 import { readOptions } from "../utils";
 
 const uri = vscode.Uri.file(SAMPLE_JS_FILE);
+const uri2 = vscode.Uri.file(JUMP_PRECISE_DEF_FILE);
 
 function testDefinition(position: vscode.Position) {
   return vscode.workspace.openTextDocument(uri).then((text) => {
@@ -16,6 +17,18 @@ function testDefinition(position: vscode.Position) {
       .then((location) => {
         const { line, character } = location.range.start;
         assert.strictEqual(true, line === 2 && character === 1);
+      });
+  });
+}
+
+function testPreciseDefinition(position: vscode.Position) {
+  return vscode.workspace.openTextDocument(uri2).then((text) => {
+    const provider = new CSSModuleDefinitionProvider(readOptions());
+    return provider
+      .provideDefinition(text, position, undefined)
+      .then((location) => {
+        const { line, character } = location.range.start;
+        assert.strictEqual(true, line === 7 && character === 1);
       });
   });
 }
@@ -50,6 +63,20 @@ test("testing es6 style definition", () => {
 test("testing commonJS style definition", () => {
   const position = new vscode.Position(4, 21);
   return Promise.resolve(testDefinition(position)).catch((err) =>
+    assert.ok(false, `error in OpenTextDocument ${err}`)
+  );
+});
+
+test("testing es6 style jump to precise definition", () => {
+  const position = new vscode.Position(4, 31);
+  return Promise.resolve(testPreciseDefinition(position)).catch((err) =>
+    assert.ok(false, `error in OpenTextDocument ${err}`)
+  );
+});
+
+test("testing commonJS style jump to precise definition", () => {
+  const position = new vscode.Position(5, 36);
+  return Promise.resolve(testPreciseDefinition(position)).catch((err) =>
     assert.ok(false, `error in OpenTextDocument ${err}`)
   );
 });
