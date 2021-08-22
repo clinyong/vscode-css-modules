@@ -15,7 +15,7 @@ export function genImportRegExp(key: string): RegExp {
   const file = "(.+\\.\\S{1,2}ss)";
   const fromOrRequire = "(?:from\\s+|=\\s+require(?:<any>)?\\()";
   const requireEndOptional = "\\)?";
-  const pattern = `${key}\\s+${fromOrRequire}["']${file}["']${requireEndOptional}`;
+  const pattern = `\\b${key}\\s+${fromOrRequire}["']${file}["']${requireEndOptional}`;
   return new RegExp(pattern);
 }
 
@@ -43,6 +43,10 @@ export async function resolveImportPath(
   currentDirPath: string,
   pathAlias: PathAlias
 ): Promise<string> {
+  if (!moduleName) {
+    return "";
+  }
+
   const realPath = path.resolve(currentDirPath, moduleName);
   if (await isPathExist(realPath)) {
     return realPath;

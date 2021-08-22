@@ -20,12 +20,15 @@ function isTrigger(line: string, position: Position): boolean {
 
 function getWords(line: string, position: Position): string {
   const text = line.slice(0, position.character);
-  const index = text.search(/[a-zA-Z0-9._]*$/);
+  // support optional chain https://github.com/tc39/proposal-optional-chaining
+  // covert ?. to .
+  const convertText = text.replace(/(\?\.)/g, '.');
+  const index = convertText.search(/[a-zA-Z0-9._]*$/);
   if (index === -1) {
     return "";
   }
 
-  return text.slice(index);
+  return convertText.slice(index);
 }
 
 export class CSSModuleCompletionProvider implements CompletionItemProvider {
