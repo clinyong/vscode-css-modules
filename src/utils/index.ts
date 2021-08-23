@@ -9,6 +9,9 @@ export function getCurrentLine(
   return document.getText(document.lineAt(position).range);
 }
 
+/**
+ * @TODO Refact by new Tokenizer
+ */
 export async function getAllClassNames(filePath: string, keyword: string): Promise<string[]> {
   const content = await fse.readFile(filePath, { encoding: "utf8" });
   const lines = content.match(/.*[,{]/g);
@@ -21,7 +24,7 @@ export async function getAllClassNames(filePath: string, keyword: string): Promi
     return [];
   }
 
-  const uniqNames = _.uniq(classNames).map((item) => item.slice(1));
+  const uniqNames = _.uniq(classNames).map((item) => item.slice(1)).filter((item) => !/^[0-9]/.test(item));
   return keyword !== ""
     ? uniqNames.filter((item) => item.indexOf(keyword) !== -1)
     : uniqNames;

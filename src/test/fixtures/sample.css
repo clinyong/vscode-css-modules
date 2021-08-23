@@ -2,4 +2,11 @@
 .header {}
 .body {}
 .footer {}
-.sidebar_without-header {}
+.sidebar_without-header {
+  /**
+   * Don't match .25rem as classname
+   * this is a bad case more detail:
+   *
+   */
+  box-shadow: 0 0.06rem 0.25rem 0 rgba(0, 0, 0, 0.18);
+}
