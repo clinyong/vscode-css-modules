@@ -11,7 +11,8 @@ export function getCurrentLine(
 
 export async function getAllClassNames(filePath: string, keyword: string): Promise<string[]> {
   // check file exists, if not just return []
-  if (await !fse.statSync(filePath).isFile()) {
+  const filePathStat = await fse.stat(filePath);
+  if (!filePathStat.isFile()) {
     return [];
   }
 
