@@ -43,10 +43,6 @@ export async function resolveImportPath(
   currentDirPath: string,
   pathAlias: PathAlias
 ): Promise<string> {
-  if (!moduleName) {
-    return "";
-  }
-
   const realPath = path.resolve(currentDirPath, moduleName);
   if (await isPathExist(realPath)) {
     return realPath;
