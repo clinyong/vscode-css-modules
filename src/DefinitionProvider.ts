@@ -78,14 +78,23 @@ function getPosition(
 
   /**
    * This is a simple solution for definition match.
-   * Only guarantee keyword not follow character other than white space
-   * /.classname\s/ match classname and not match classnameSuffix
-   * Attention: we don't handling the dot at keyword string
-   * so the final regexp is /- AnyCharExceptNewLine - classname - Whitespace -/
+   * Only guarantee keyword not follow normal characters
+   * 
+   * if we want match [.main] classname
+   * escaped dot char first and then use RegExp to match
+   * more detail -> https://github.com/clinyong/vscode-css-modules/pull/41#discussion_r696247941
+   * 
+   * 1. .main,   // valid
+   * 2. .main    // valid
+   * 
+   * 3. .main-sub   // invalid
+   * 4. .main09     // invalid
+   * 5. .main_bem   // invalid
+   * 6. .mainsuffix // invalid
    * 
    * @TODO Refact by new tokenizer later
    */
-  const keyWordMatchReg = new RegExp(`${keyWord}\\s`);
+  const keyWordMatchReg = new RegExp(`${keyWord.replace(/^\./, '\\.')}(?![_0-9a-zA-Z-])`);
 
   for (let i = 0; i < lines.length; i++) {
     const originalLine = lines[i];
@@ -105,22 +114,21 @@ function getPosition(
     const line = !classTransformer
       ? originalLine
       : classTransformer(originalLine);
+
     /**
-     * add ' ' string to fix
-     * https://github.com/clinyong/vscode-css-modules/pull/41#issuecomment-903276100
-     * 
-     * @TODO remove line + " " when we use new tokenizer to scan css className
+     * @isMatchChar for match check
+     * @character for position
      */
-    let isMatchChar = keyWordMatchReg.test(line + " ");
+    let isMatchChar = keyWordMatchReg.test(line);
     character = line.indexOf(keyWord);
-    if (character === -1 && !!classTransformer) {
+    if (!isMatchChar && !!classTransformer) {
       // if camelized match fails, and transformer is there
       // try matching the un-camelized classnames too!
       character = originalLine.indexOf(keyWord);
       isMatchChar = keyWordMatchReg.test(originalLine);
     }
 
-    if (isMatchChar && character !== -1) {
+    if (isMatchChar) {
       lineNumber = i;
       break;
     }
