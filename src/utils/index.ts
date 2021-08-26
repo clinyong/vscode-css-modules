@@ -13,6 +13,12 @@ export function getCurrentLine(
  * @TODO Refact by new Tokenizer
  */
 export async function getAllClassNames(filePath: string, keyword: string): Promise<string[]> {
+  // check file exists, if not just return []
+  const filePathStat = await fse.stat(filePath);
+  if (!filePathStat.isFile()) {
+    return [];
+  }
+
   const content = await fse.readFile(filePath, { encoding: "utf8" });
   const lines = content.match(/.*[,{]/g);
   if (lines === null) {
