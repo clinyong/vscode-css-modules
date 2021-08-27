@@ -1,0 +1,30 @@
+.classnameSuffixOne {
+  color: red;
+}
+.classnameSuffixTwo {
+  color: black;
+}
+/** jump to here case-1 **/
+.classname {
+  color: yellow;
+}
+.left-case,
+.left_case,
+.leftA,
+.leftZ,
+.lefta,
+.leftz,
+.left0,
+.left9,
+/** jump to here case-2 **/
+.left,
+.right {
+  display: flex;
+  align-items: center;
+}
+.classnameSuffix {
+  color: yellow;
+}
+.class {
+  color: beige;
+}

@@ -76,6 +76,26 @@ function getPosition(
     keyWord = `.${className}`;
   }
 
+  /**
+   * This is a simple solution for definition match.
+   * Only guarantee keyword not follow normal characters
+   * 
+   * if we want match [.main] classname
+   * escaped dot char first and then use RegExp to match
+   * more detail -> https://github.com/clinyong/vscode-css-modules/pull/41#discussion_r696247941
+   * 
+   * 1. .main,   // valid
+   * 2. .main    // valid
+   * 
+   * 3. .main-sub   // invalid
+   * 4. .main09     // invalid
+   * 5. .main_bem   // invalid
+   * 6. .mainsuffix // invalid
+   * 
+   * @TODO Refact by new tokenizer later
+   */
+  const keyWordMatchReg = new RegExp(`${keyWord.replace(/^\./, '\\.')}(?![_0-9a-zA-Z-])`);
+
   for (let i = 0; i < lines.length; i++) {
     const originalLine = lines[i];
     /**
@@ -94,15 +114,21 @@ function getPosition(
     const line = !classTransformer
       ? originalLine
       : classTransformer(originalLine);
-    character = line.indexOf(keyWord);
 
-    if (character === -1 && !!classTransformer) {
+    /**
+     * @isMatchChar for match check
+     * @character for position
+     */
+    let isMatchChar = keyWordMatchReg.test(line);
+    character = line.indexOf(keyWord);
+    if (!isMatchChar && !!classTransformer) {
       // if camelized match fails, and transformer is there
       // try matching the un-camelized classnames too!
       character = originalLine.indexOf(keyWord);
+      isMatchChar = keyWordMatchReg.test(originalLine);
     }
 
-    if (character !== -1) {
+    if (isMatchChar) {
       lineNumber = i;
       break;
     }
