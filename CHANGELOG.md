@@ -1,3 +1,7 @@
+## 0.3.1
+
+- Optimize regular expression matches.
+
 ## 0.3.0
 
 - Support path alias. Big thanks to [@iChenLei](https://github.com/iChenLei).
