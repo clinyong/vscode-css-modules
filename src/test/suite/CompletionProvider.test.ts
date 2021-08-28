@@ -81,6 +81,18 @@ test("test camelCase:false style completion", () => {
   });
 });
 
+test("test camelCase:false style and kebab-case completion", () => {
+  const position = new vscode.Position(5, 21);
+  return Promise.resolve(
+    testCompletionWithCase(position, false, [
+      (items) => assert.strictEqual(1, items.length),
+      (items) => assert.strictEqual(`['sidebar_without-header']`, items[0].insertText),
+    ])
+  ).catch((err) => {
+    assert.ok(false, `error in OpenTextDocument ${err}`);
+  });
+});
+
 test("test camelCase:true style completion", () => {
   const position = new vscode.Position(5, 21);
   return Promise.resolve(
