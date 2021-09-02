@@ -3,13 +3,11 @@ import {
   TextDocument,
   Position,
   CompletionItem,
-  CompletionItemKind,
-  Range,
-  TextEdit,
+  CompletionItemKind
 } from "vscode";
 import * as path from "path";
 import * as _ from "lodash";
-import { getAllClassNames, getCurrentLine, dashesCamelCase } from "./utils";
+import { getAllClassNames, getCurrentLine, dashesCamelCase, isKebabCaseClassName, createBracketCompletionItem } from "./utils";
 import { findImportModule, resolveImportPath } from "./utils/path";
 import { AliasFromUserOptions, ExtensionOptions } from "./options";
 import { getRealPathAlias } from "./path-alias";
@@ -88,15 +86,8 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
         if (this._classTransformer) {
           name = this._classTransformer(name);
         }
-        // handle kebab-case classname
-        if (name.includes('-')) {
-          const completionItem = new CompletionItem(name, CompletionItemKind.Variable);
-          completionItem.detail = `['${name}']`;
-          completionItem.documentation = "kebab-casing may cause unexpected behavior when trying to access style.class-name as a dot notation. You can still work around kebab-case with bracket notation (eg. style['class-name']) but style.className is cleaner.";
-          completionItem.insertText = `['${name}']`;
-          completionItem.additionalTextEdits = [new TextEdit(new Range(new Position(position.line, position.character - 1),
-              new Position(position.line, position.character)), '')];
-          return completionItem;
+        if (isKebabCaseClassName(name)) {
+          return createBracketCompletionItem(name, position);
         } 
         return new CompletionItem(name, CompletionItemKind.Variable);
       })

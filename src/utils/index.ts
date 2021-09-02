@@ -1,4 +1,4 @@
-import { Position, TextDocument } from "vscode";
+import { Position, TextDocument, CompletionItem, CompletionItemKind, TextEdit, Range } from "vscode";
 import * as fse from "fs-extra";
 import * as _ from "lodash";
 
@@ -42,4 +42,24 @@ export function dashesCamelCase(str: string): string {
   return str.replace(/-(\w)/g, function (match, firstLetter) {
     return firstLetter.toUpperCase();
   });
+}
+
+/**
+ * check kebab-case classname
+ */
+export function isKebabCaseClassName (className: string): boolean {
+  return className?.includes('-');
+}
+
+/**
+ * BracketCompletionItem Factory
+ */
+export function createBracketCompletionItem (className: string, position: Position): CompletionItem {
+  const completionItem = new CompletionItem(className, CompletionItemKind.Variable);
+  completionItem.detail = `['${className}']`;
+  completionItem.documentation = "kebab-casing may cause unexpected behavior when trying to access style.class-name as a dot notation. You can still work around kebab-case with bracket notation (eg. style['class-name']) but style.className is cleaner.";
+  completionItem.insertText = `['${className}']`;
+  completionItem.additionalTextEdits = [new TextEdit(new Range(new Position(position.line, position.character - 1),
+      new Position(position.line, position.character)), '')];
+  return completionItem;
 }
