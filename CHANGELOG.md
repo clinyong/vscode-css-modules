@@ -24,4 +24,4 @@
 
 ## 0.2.0
 
-- Support ES6 style import
+- Support ES6 style import.
