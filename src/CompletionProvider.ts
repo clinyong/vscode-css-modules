@@ -3,11 +3,11 @@ import {
   TextDocument,
   Position,
   CompletionItem,
-  CompletionItemKind,
+  CompletionItemKind
 } from "vscode";
 import * as path from "path";
 import * as _ from "lodash";
-import { getAllClassNames, getCurrentLine, dashesCamelCase } from "./utils";
+import { getAllClassNames, getCurrentLine, dashesCamelCase, isKebabCaseClassName, createBracketCompletionItem } from "./utils";
 import { findImportModule, resolveImportPath } from "./utils/path";
 import { AliasFromUserOptions, ExtensionOptions } from "./options";
 import { getRealPathAlias } from "./path-alias";
@@ -86,6 +86,9 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
         if (this._classTransformer) {
           name = this._classTransformer(name);
         }
+        if (isKebabCaseClassName(name)) {
+          return createBracketCompletionItem(name, position);
+        } 
         return new CompletionItem(name, CompletionItemKind.Variable);
       })
     );
