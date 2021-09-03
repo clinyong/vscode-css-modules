@@ -1,3 +1,7 @@
+## 0.3.2
+
+- Support bracket notation completion.
+
 ## 0.3.1
 
 - Optimize regular expression matches.
