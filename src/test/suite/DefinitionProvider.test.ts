@@ -3,11 +3,12 @@ import * as vscode from "vscode";
 
 import { CSSModuleDefinitionProvider } from "../../DefinitionProvider";
 import { CamelCaseValues } from "../../options";
-import { JUMP_PRECISE_DEF_FILE, SAMPLE_JS_FILE } from "../constant";
+import { JUMP_PRECISE_DEF_FILE, SAMPLE_JS_FILE, STYLUS_JS_FILE } from "../constant";
 import { readOptions } from "../utils";
 
 const uri = vscode.Uri.file(SAMPLE_JS_FILE);
 const uri2 = vscode.Uri.file(JUMP_PRECISE_DEF_FILE);
+const uri3 = vscode.Uri.file(STYLUS_JS_FILE);
 
 function testDefinition(position: vscode.Position, lineNum: number, characterNum: number, fixtureFile?: vscode.Uri) {
   return vscode.workspace.openTextDocument(fixtureFile || uri).then((text) => {
@@ -79,6 +80,34 @@ test("testing es6 style jump to precise definition case2", () => {
 test("testing commonJS style jump to precise definition case2", () => {
   const position = new vscode.Position(7, 32);
   return Promise.resolve(testDefinition(position, 19, 1, uri2)).catch((err) =>
+    assert.ok(false, `error in OpenTextDocument ${err}`)
+  );
+});
+
+test("testing stylus @css jump to definition", () => {
+  const position = new vscode.Position(5, 31);
+  return Promise.resolve(testDefinition(position, 14, 3, uri3)).catch((err) =>
+    assert.ok(false, `error in OpenTextDocument ${err}`)
+  );
+});
+
+test("testing stylus indent classname jump to definition", () => {
+  const position = new vscode.Position(6, 31);
+  return Promise.resolve(testDefinition(position, 4, 3, uri3)).catch((err) =>
+    assert.ok(false, `error in OpenTextDocument ${err}`)
+  );
+});
+
+test("testing stylus CSS-like syntax classname jump to definition", () => {
+  const position = new vscode.Position(4, 29);
+  return Promise.resolve(testDefinition(position, 10, 1, uri3)).catch((err) =>
+    assert.ok(false, `error in OpenTextDocument ${err}`)
+  );
+});
+
+test("testing stylus nest classname jump to definition", () => {
+  const position = new vscode.Position(7, 31);
+  return Promise.resolve(testDefinition(position, 4, 4, uri3)).catch((err) =>
     assert.ok(false, `error in OpenTextDocument ${err}`)
   );
 });

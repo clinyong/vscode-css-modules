@@ -3,13 +3,14 @@ import * as vscode from "vscode";
 
 import { CSSModuleCompletionProvider } from "../../CompletionProvider";
 import { CamelCaseValues } from "../../options";
-import { SAMPLE_JS_FILE } from "../constant";
+import { SAMPLE_JS_FILE, STYLUS_JS_FILE } from "../constant";
 import { readOptions } from "../utils";
 
 const uri = vscode.Uri.file(SAMPLE_JS_FILE);
+const uri2 = vscode.Uri.file(STYLUS_JS_FILE);
 
-function testCompletion(position: vscode.Position, itemCount: number) {
-  return vscode.workspace.openTextDocument(uri).then((text) => {
+function testCompletion(position: vscode.Position, itemCount: number, fixtureFile?: vscode.Uri) {
+  return vscode.workspace.openTextDocument(fixtureFile || uri).then((text) => {
     const provider = new CSSModuleCompletionProvider(readOptions());
     return provider.provideCompletionItems(text, position).then((items) => {
       assert.strictEqual(itemCount, items.length);
@@ -65,6 +66,20 @@ test("test optional chain valid match", () => {
 test("test exact Match", () => {
   const position = new vscode.Position(14, 4);
   return Promise.resolve(testCompletion(position, 0)).catch((err) => {
+    assert.ok(false, `error in OpenTextDocument ${err}`);
+  });
+});
+
+test("test mix code style .styl completion", () => {
+  const position = new vscode.Position(6, 29);
+  return Promise.resolve(testCompletion(position, 3, uri2)).catch((err) => {
+    assert.ok(false, `error in OpenTextDocument ${err}`);
+  });
+});
+
+test("test .stylus extname stylus completion", () => {
+  const position = new vscode.Position(8, 29);
+  return Promise.resolve(testCompletion(position, 5, uri2)).catch((err) => {
     assert.ok(false, `error in OpenTextDocument ${err}`);
   });
 });

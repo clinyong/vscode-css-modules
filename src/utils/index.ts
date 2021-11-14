@@ -20,7 +20,13 @@ export async function getAllClassNames(filePath: string, keyword: string): Promi
   }
 
   const content = await fse.readFile(filePath, { encoding: "utf8" });
-  const lines = content.match(/.*[,{]/g);
+  let matchLineRegexp = /.*[,{]/g;
+
+   // experimental stylus support
+  if (filePath.endsWith(".styl") ||filePath.endsWith(".stylus")) {
+    matchLineRegexp = /\..*/g
+  }
+  const lines = content.match(matchLineRegexp);
   if (lines === null) {
     return [];
   }
