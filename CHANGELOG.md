@@ -1,3 +1,7 @@
+## 0.4.0
+
+- Experimental stylus support.
+
 ## 0.3.2
 
 - Support bracket notation completion.
