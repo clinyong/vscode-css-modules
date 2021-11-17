@@ -12,7 +12,7 @@ function isPathExist(p: string): Promise<boolean> {
 }
 
 export function genImportRegExp(key: string): RegExp {
-  const file = "(.+\\.\\S{1,2}ss)";
+  const file = "(.+\\.(\\S{1,2}ss|stylus|styl))";
   const fromOrRequire = "(?:from\\s+|=\\s+require(?:<any>)?\\()";
   const requireEndOptional = "\\)?";
   const pattern = `\\s${key}\\s+${fromOrRequire}["']${file}["']${requireEndOptional}`;
