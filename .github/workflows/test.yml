@@ -6,7 +6,11 @@ on: [push, pull_request]
 
 jobs:
   VSCode-Test:
-    runs-on: macos-latest
+    name: 'CI on ${{matrix.os}} with node14'
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
         with:
