@@ -164,6 +164,7 @@ test("getRealPathAlias: support windows and macos system", () => {
   return Promise.resolve(
     vscode.workspace.openTextDocument(aliasFile).then((text) => {
       return getRealPathAlias({}, text).then(pathAlias => {
+        assert.ok(false, `${pathAlias}`);
         assert.strictEqual(true, pathAlias['@styles'][0] === aliasFolder.fsPath);
       }).catch(err => {
         assert.ok(false, `error in getRealPathAlias ${err}`);
