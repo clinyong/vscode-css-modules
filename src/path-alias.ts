@@ -46,7 +46,7 @@ export async function getRealPathAlias(
     // Alias from extension option has higher priority.
     const alias: PathAlias = Object.assign({}, tsAlias, pathAliasOptions);
 
-    return replaceWorkspaceFolderWithRootPath(alias, workspaceFolder.uri.path);
+    return replaceWorkspaceFolderWithRootPath(alias, workspaceFolder.uri.fsPath);
   } else {
     return filterWorkspaceFolderAlias(pathAliasOptions);
   }
