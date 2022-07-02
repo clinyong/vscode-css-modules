@@ -3,23 +3,49 @@ import * as vscode from "vscode";
 
 import { CSSModuleDefinitionProvider } from "../../DefinitionProvider";
 import { CamelCaseValues } from "../../options";
-import { JUMP_PRECISE_DEF_FILE, SAMPLE_JS_FILE, STYLUS_JS_FILE } from "../constant";
+import {
+  JUMP_PRECISE_DEF_FILE,
+  SAMPLE_JS_FILE,
+  SPREAD_SYNTAX_FILE,
+  STYLUS_JS_FILE,
+} from "../constant";
 import { readOptions } from "../utils";
 
 const uri = vscode.Uri.file(SAMPLE_JS_FILE);
 const uri2 = vscode.Uri.file(JUMP_PRECISE_DEF_FILE);
 const uri3 = vscode.Uri.file(STYLUS_JS_FILE);
 
-function testDefinition(position: vscode.Position, lineNum: number, characterNum: number, fixtureFile?: vscode.Uri) {
+function getDefinitionLineAndChar(
+  position: vscode.Position,
+  fixtureFile?: vscode.Uri
+) {
   return vscode.workspace.openTextDocument(fixtureFile || uri).then((text) => {
     const provider = new CSSModuleDefinitionProvider(readOptions());
     return provider
       .provideDefinition(text, position, undefined)
       .then((location) => {
+        if (!location) return null;
+
         const { line, character } = location.range.start;
-        assert.strictEqual(true, line === lineNum && character === characterNum);
+        return {
+          line,
+          character,
+        };
       });
   });
+}
+
+async function testDefinition(
+  position: vscode.Position,
+  lineNum: number,
+  characterNum: number,
+  fixtureFile?: vscode.Uri
+) {
+  const result = await getDefinitionLineAndChar(position, fixtureFile);
+  assert.strictEqual(
+    true,
+    result.line === lineNum && result.character === characterNum
+  );
 }
 
 function testDefinitionWithCase(
@@ -126,7 +152,10 @@ test("test camelCase:true style completion", () => {
   return Promise.resolve(
     testDefinitionWithCase(position, true, [
       (position?: vscode.Position) =>
-        assert.strictEqual(true, position.line === 4 && position.character === 1),
+        assert.strictEqual(
+          true,
+          position.line === 4 && position.character === 1
+        ),
     ])
   ).catch((err) => assert.ok(false, `error in OpenTextDocument ${err}`));
 });
@@ -136,7 +165,19 @@ test("test camelCase:dashes style completion", () => {
   return Promise.resolve(
     testDefinitionWithCase(position, "dashes", [
       (position?: vscode.Position) =>
-        assert.strictEqual(true, position.line === 4 && position.character === 1),
+        assert.strictEqual(
+          true,
+          position.line === 4 && position.character === 1
+        ),
     ])
   ).catch((err) => assert.ok(false, `error in OpenTextDocument ${err}`));
+});
+
+test("ignore spread syntax", async () => {
+  const position = new vscode.Position(3, 15);
+  const result = await getDefinitionLineAndChar(
+    position,
+    vscode.Uri.file(SPREAD_SYNTAX_FILE)
+  );
+  assert.deepStrictEqual(result, null);
 });
