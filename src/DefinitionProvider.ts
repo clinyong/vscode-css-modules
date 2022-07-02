@@ -167,6 +167,11 @@ function getKeyword(currentLine: string, position: Position): Keyword | null {
   }
 
   const [obj, field] = words.split(".");
+  if (!obj || !field) {
+    // probably a spread operator
+    return null;
+  }
+
   return { obj, field };
 }
 
