@@ -1,3 +1,7 @@
+## 0.4.2
+
+- Fix spread operator incorrect definition. [#69](https://github.com/clinyong/vscode-css-modules/pull/69) for detail.
+
 ## 0.4.1
 
 - Fix unable to resolve alias path on Windows. [#53](https://github.com/clinyong/vscode-css-modules/issues/53) for detail.
