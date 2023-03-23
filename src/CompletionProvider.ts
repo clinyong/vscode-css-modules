@@ -78,7 +78,7 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
       return Promise.resolve([]);
     }
 
-    const classNames = await getAllClassNames(importPath, field);
+    const classNames = await getAllClassNames(importPath, field, document);
 
     return Promise.resolve(
       classNames.map((_class) => {
@@ -88,7 +88,7 @@ export class CSSModuleCompletionProvider implements CompletionItemProvider {
         }
         if (isKebabCaseClassName(name)) {
           return createBracketCompletionItem(name, position);
-        } 
+        }
         return new CompletionItem(name, CompletionItemKind.Variable);
       })
     );

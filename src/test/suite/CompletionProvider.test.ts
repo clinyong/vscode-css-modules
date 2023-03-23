@@ -3,13 +3,18 @@ import * as vscode from "vscode";
 
 import { CSSModuleCompletionProvider } from "../../CompletionProvider";
 import { CamelCaseValues } from "../../options";
-import { SAMPLE_JS_FILE, STYLUS_JS_FILE } from "../constant";
+import { LESS_JS_FILE, SAMPLE_JS_FILE, STYLUS_JS_FILE } from "../constant";
 import { readOptions } from "../utils";
 
 const uri = vscode.Uri.file(SAMPLE_JS_FILE);
 const uri2 = vscode.Uri.file(STYLUS_JS_FILE);
+const lessUri = vscode.Uri.file(LESS_JS_FILE);
 
-function testCompletion(position: vscode.Position, itemCount: number, fixtureFile?: vscode.Uri) {
+function testCompletion(
+  position: vscode.Position,
+  itemCount: number,
+  fixtureFile?: vscode.Uri
+) {
   return vscode.workspace.openTextDocument(fixtureFile || uri).then((text) => {
     const provider = new CSSModuleCompletionProvider(readOptions());
     return provider.provideCompletionItems(text, position).then((items) => {
@@ -101,7 +106,8 @@ test("test camelCase:false style and kebab-case completion", () => {
   return Promise.resolve(
     testCompletionWithCase(position, false, [
       (items) => assert.strictEqual(1, items.length),
-      (items) => assert.strictEqual(`['sidebar_without-header']`, items[0].insertText),
+      (items) =>
+        assert.strictEqual(`['sidebar_without-header']`, items[0].insertText),
     ])
   ).catch((err) => {
     assert.ok(false, `error in OpenTextDocument ${err}`);
@@ -128,6 +134,13 @@ test("test camelCase:dashes style completion", () => {
       (items) => assert.strictEqual("sidebar_withoutHeader", items[0].label),
     ])
   ).catch((err) => {
+    assert.ok(false, `error in OpenTextDocument ${err}`);
+  });
+});
+
+test("test .less extname less completion", () => {
+  const position = new vscode.Position(5, 7);
+  return Promise.resolve(testCompletion(position, 3, lessUri)).catch((err) => {
     assert.ok(false, `error in OpenTextDocument ${err}`);
   });
 });
