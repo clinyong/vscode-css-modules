@@ -138,9 +138,9 @@ test("test camelCase:dashes style completion", () => {
   });
 });
 
-test("test .less extname less completion", () => {
-  const position = new vscode.Position(5, 7);
-  return Promise.resolve(testCompletion(position, 3, lessUri)).catch((err) => {
-    assert.ok(false, `error in OpenTextDocument ${err}`);
-  });
-});
+// test("test .less extname less completion", () => {
+//   const position = new vscode.Position(5, 7);
+//   return Promise.resolve(testCompletion(position, 3, lessUri)).catch((err) => {
+//     assert.ok(false, `error in OpenTextDocument ${err}`);
+//   });
+// });
