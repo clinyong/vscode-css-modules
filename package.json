@@ -18,7 +18,8 @@
     "activationEvents": [
         "onLanguage:typescriptreact",
         "onLanguage:javascriptreact",
-        "onLanguage:javascript"
+        "onLanguage:javascript",
+        "onLanguage:typescript"
     ],
     "contributes": {
         "configuration": {
@@ -43,10 +44,10 @@
     },
     "main": "./out/extension.js",
     "scripts": {
-        "vscode:prepublish": "yarn run compile",
+        "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "pretest": "yarn run compile && yarn run lint",
+        "pretest": "npm run compile && npm run lint",
         "lint": "eslint src --ext ts",
         "test": "node ./out/test/runTest.js",
         "prepare": "husky install"
@@ -58,7 +59,7 @@
         "@types/vscode": "^1.56.0",
         "@typescript-eslint/eslint-plugin": "^4.26.0",
         "@typescript-eslint/parser": "^4.26.0",
-        "@vscode/test-electron": "^1.6.1",
+        "@vscode/test-electron": "^2.3.0",
         "eslint": "^7.27.0",
         "glob": "^7.1.7",
         "husky": ">=6",

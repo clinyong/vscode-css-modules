@@ -2,23 +2,25 @@
 name: VSCode Test
 
 # Triggers the workflow on push or pull request events
-on: [push, pull_request]
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
 
 jobs:
   VSCode-Test:
-    name: 'CI on ${{matrix.os}} with node14'
+    name: 'CI on ${{matrix.os}} with nodejs'
     strategy:
       matrix:
         os: [macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 2
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
          node-version: '18'
-         cache: 'yarn'
-      - run: yarn install
-      - run: yarn test
-      
+      - run: npm install
+      - run: npm run test
