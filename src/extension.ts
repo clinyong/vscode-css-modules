@@ -10,6 +10,7 @@ export function activate(context: ExtensionContext): void {
     { language: "typescriptreact", scheme: "file" },
     { language: "javascriptreact", scheme: "file" },
     { language: "javascript", scheme: "file" },
+    { language: "typescript", scheme: "file" },
   ];
   const options = readOptions();
   context.subscriptions.push(
