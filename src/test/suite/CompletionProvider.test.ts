@@ -135,6 +135,13 @@ test("test camelCase:dashes style completion", () => {
   });
 });
 
+test("support jsx", () => {
+  const position = new vscode.Position(3, 20);
+  return Promise.resolve(testCompletion(position, 5, uri)).catch((err) => {
+    assert.ok(false, `error in OpenTextDocument ${err}`);
+  });
+});
+
 test("support js", () => {
   const position = new vscode.Position(3, 28);
   return Promise.resolve(testCompletion(position, 5, uri3)).catch((err) => {
