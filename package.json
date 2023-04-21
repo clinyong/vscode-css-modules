@@ -18,7 +18,8 @@
     "activationEvents": [
         "onLanguage:typescriptreact",
         "onLanguage:javascriptreact",
-        "onLanguage:javascript"
+        "onLanguage:javascript",
+        "onLanguage:typescript"
     ],
     "contributes": {
         "configuration": {
@@ -52,13 +53,14 @@
         "prepare": "husky install"
     },
     "devDependencies": {
+        "@types/fs-extra": "^9.0.11",
         "@types/glob": "^7.1.3",
         "@types/mocha": "^8.2.2",
         "@types/node": "14.x",
         "@types/vscode": "^1.56.0",
         "@typescript-eslint/eslint-plugin": "^4.26.0",
         "@typescript-eslint/parser": "^4.26.0",
-        "@vscode/test-electron": "^1.6.1",
+        "@vscode/test-electron": "^2.3.0",
         "eslint": "^7.27.0",
         "glob": "^7.1.7",
         "husky": ">=6",
@@ -68,7 +70,6 @@
         "typescript": "^4.3.2"
     },
     "dependencies": {
-        "@types/fs-extra": "^9.0.11",
         "fs-extra": "^10.0.0",
         "json5": "^2.2.0",
         "lodash": "^4.17.4"
