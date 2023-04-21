@@ -5,5 +5,5 @@ interface ITheme {
 }
 
 const myTheme: ITheme = {
-    backgroundTheme: styles.
+    backgroundTheme: styles.container
 }
