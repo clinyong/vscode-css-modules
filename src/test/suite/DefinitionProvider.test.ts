@@ -5,15 +5,15 @@ import { CSSModuleDefinitionProvider } from "../../DefinitionProvider";
 import { CamelCaseValues } from "../../options";
 import {
   JUMP_PRECISE_DEF_FILE,
-  SAMPLE_JS_FILE,
+  SAMPLE_JSX_FILE,
   SPREAD_SYNTAX_FILE,
-  STYLUS_JS_FILE,
+  STYLUS_JSX_FILE,
 } from "../constant";
 import { readOptions } from "../utils";
 
-const uri = vscode.Uri.file(SAMPLE_JS_FILE);
+const uri = vscode.Uri.file(SAMPLE_JSX_FILE);
 const uri2 = vscode.Uri.file(JUMP_PRECISE_DEF_FILE);
-const uri3 = vscode.Uri.file(STYLUS_JS_FILE);
+const uri3 = vscode.Uri.file(STYLUS_JSX_FILE);
 
 function getDefinitionLineAndChar(
   position: vscode.Position,
