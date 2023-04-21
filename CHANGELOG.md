@@ -1,4 +1,4 @@
-## 0.5.0
+## 0.5.1
 
 - Active the extension for typescript files. [#85](https://github.com/clinyong/vscode-css-modules/pull/85) for detail.
 
