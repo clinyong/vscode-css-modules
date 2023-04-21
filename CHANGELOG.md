@@ -1,3 +1,7 @@
+## 0.5.0
+
+- Active the extension for typescript files. [#85](https://github.com/clinyong/vscode-css-modules/pull/85) for detail.
+
 ## 0.4.2
 
 - Fix spread operator incorrect definition. [#69](https://github.com/clinyong/vscode-css-modules/pull/69) for detail.
