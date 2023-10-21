@@ -13,3 +13,10 @@ v?.a; // don't match anything
 styles1?. // support optional chain
 const es1 = {};
 es1. // don't match styles1
+
+// Support bracket notation
+styles1["
+styles1['
+styles1[""]
+styles1['']
+
