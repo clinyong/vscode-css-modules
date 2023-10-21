@@ -14,9 +14,12 @@ styles1?. // support optional chain
 const es1 = {};
 es1. // don't match styles1
 
-// Support bracket notation
+// Support autocompletion with bracket notation
 styles1["
 styles1['
 styles1[""]
 styles1['']
 
+// issue-#70
+console.log(styles1["body"]);
+console.log(styles1['body']);
