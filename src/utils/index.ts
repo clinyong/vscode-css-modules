@@ -65,7 +65,10 @@ export function createBracketCompletionItem (className: string, position: Positi
   completionItem.detail = `['${className}']`;
   completionItem.documentation = "kebab-casing may cause unexpected behavior when trying to access style.class-name as a dot notation. You can still work around kebab-case with bracket notation (eg. style['class-name']) but style.className is cleaner.";
   completionItem.insertText = `['${className}']`;
-  completionItem.additionalTextEdits = [new TextEdit(new Range(new Position(position.line, position.character - 1),
-      new Position(position.line, position.character)), '')];
+  // .className -> ['className']
+  // set filterText to match .className
+  // https://github.com/microsoft/vscode/issues/113551#issuecomment-754158355
+  completionItem.filterText = `.${className}`
+  completionItem.range = new Range(new Position(position.line, position.character - 1), position);
   return completionItem;
 }
