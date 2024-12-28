@@ -3,7 +3,14 @@ import * as vscode from "vscode";
 
 import { CSSModuleCompletionProvider } from "../../CompletionProvider";
 import { CamelCaseValues } from "../../options";
-import { SAMPLE_JSX_FILE, SAMPLE_JS_FILE, SAMPLE_TSX_FILE, SAMPLE_TS_FILE, STYLUS_JSX_FILE } from "../constant";
+import {
+  SAMPLE_ASTRO_FILE,
+  SAMPLE_JSX_FILE,
+  SAMPLE_JS_FILE,
+  SAMPLE_TSX_FILE,
+  SAMPLE_TS_FILE,
+  STYLUS_JSX_FILE,
+} from "../constant";
 import { readOptions } from "../utils";
 
 const uri = vscode.Uri.file(SAMPLE_JSX_FILE);
@@ -11,6 +18,7 @@ const uri2 = vscode.Uri.file(STYLUS_JSX_FILE);
 const uri3 = vscode.Uri.file(SAMPLE_JS_FILE);
 const uri4 = vscode.Uri.file(SAMPLE_TSX_FILE);
 const uri5 = vscode.Uri.file(SAMPLE_TS_FILE);
+const uri6 = vscode.Uri.file(SAMPLE_ASTRO_FILE);
 
 function testCompletion(position: vscode.Position, itemCount: number, fixtureFile?: vscode.Uri) {
   return vscode.workspace.openTextDocument(fixtureFile || uri).then((text) => {
@@ -159,6 +167,13 @@ test("support tsx", () => {
 test("support ts", () => {
   const position = new vscode.Position(7, 28);
   return Promise.resolve(testCompletion(position, 5, uri5)).catch((err) => {
+    assert.ok(false, `error in OpenTextDocument ${err}`);
+  });
+});
+
+test("support astro", () => {
+  const position = new vscode.Position(8, 28);
+  return Promise.resolve(testCompletion(position, 5, uri6)).catch((err) => {
     assert.ok(false, `error in OpenTextDocument ${err}`);
   });
 });
