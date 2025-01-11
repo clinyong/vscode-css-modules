@@ -1,3 +1,7 @@
+## 0.5.2
+
+- Add support for Astro files. [#98](https://github.com/clinyong/vscode-css-modules/pull/98) for detail.
+
 ## 0.5.1
 
 - Active the extension for typescript files. [#85](https://github.com/clinyong/vscode-css-modules/pull/85) for detail.
