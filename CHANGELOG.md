@@ -1,4 +1,4 @@
-## 0.5.2
+## 0.5.3
 
 - Add support for Astro files. [#98](https://github.com/clinyong/vscode-css-modules/pull/98) for detail.
 
