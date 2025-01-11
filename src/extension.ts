@@ -1,5 +1,5 @@
 "use strict";
-import { languages, ExtensionContext, DocumentFilter } from "vscode";
+import { DocumentFilter, ExtensionContext, languages } from "vscode";
 import { CSSModuleCompletionProvider } from "./CompletionProvider";
 import { CSSModuleDefinitionProvider } from "./DefinitionProvider";
 import { readOptions } from "./options";
@@ -11,6 +11,7 @@ export function activate(context: ExtensionContext): void {
     { language: "javascriptreact", scheme: "file" },
     { language: "javascript", scheme: "file" },
     { language: "typescript", scheme: "file" },
+    { language: "astro", scheme: "file" },
   ];
   const options = readOptions();
   context.subscriptions.push(
