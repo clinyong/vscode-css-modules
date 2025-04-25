@@ -2,7 +2,7 @@
     "name": "vscode-css-modules",
     "displayName": "CSS Modules",
     "description": "Visual Studio Code extension for CSS Modules",
-    "version": "0.5.1",
+    "version": "0.5.3",
     "publisher": "clinyong",
     "engines": {
         "vscode": "^1.56.0"
@@ -19,7 +19,8 @@
         "onLanguage:typescriptreact",
         "onLanguage:javascriptreact",
         "onLanguage:javascript",
-        "onLanguage:typescript"
+        "onLanguage:typescript",
+        "onLanguage:astro"
     ],
     "contributes": {
         "configuration": {
