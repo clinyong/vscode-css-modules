@@ -14,16 +14,15 @@ export function activate(context: ExtensionContext): void {
     { language: "astro", scheme: "file" },
   ];
   const options = readOptions();
-  const triggerCharacters = [".", "\"", "'"]
-  triggerCharacters.forEach(char => {
     context.subscriptions.push(
       languages.registerCompletionItemProvider(
         mode,
         new CSSModuleCompletionProvider(options),
-        char
+        ".",
+        "\"",
+        "'"
       )
     );
-  })
   context.subscriptions.push(
     languages.registerDefinitionProvider(
       mode,
