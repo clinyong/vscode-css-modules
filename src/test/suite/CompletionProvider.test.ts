@@ -20,7 +20,11 @@ const uri4 = vscode.Uri.file(SAMPLE_TSX_FILE);
 const uri5 = vscode.Uri.file(SAMPLE_TS_FILE);
 const uri6 = vscode.Uri.file(SAMPLE_ASTRO_FILE);
 
-function testCompletion(position: vscode.Position, itemCount: number, fixtureFile?: vscode.Uri) {
+function testCompletion(
+  position: vscode.Position,
+  itemCount: number,
+  fixtureFile?: vscode.Uri
+) {
   return vscode.workspace.openTextDocument(fixtureFile || uri).then((text) => {
     const provider = new CSSModuleCompletionProvider(readOptions());
     return provider.provideCompletionItems(text, position).then((items) => {
@@ -74,6 +78,34 @@ test("test optional chain valid match", () => {
   });
 });
 
+test("test bracket notation with double quotes and no closing quote valid match", () => {
+  const position = new vscode.Position(17, 9);
+  return Promise.resolve(testCompletion(position, 5)).catch((err) => {
+    assert.ok(false, `error in OpenTextDocument ${err}`);
+  });
+});
+
+test("test bracket notation with single quotes and no closing quote valid match", () => {
+  const position = new vscode.Position(18, 9);
+  return Promise.resolve(testCompletion(position, 5)).catch((err) => {
+    assert.ok(false, `error in OpenTextDocument ${err}`);
+  });
+});
+
+test("test bracket notation with double quotes and closing quote valid match", () => {
+  const position = new vscode.Position(19, 9);
+  return Promise.resolve(testCompletion(position, 5)).catch((err) => {
+    assert.ok(false, `error in OpenTextDocument ${err}`);
+  });
+});
+
+test("test bracket notation with single quotes and closing quote valid match", () => {
+  const position = new vscode.Position(20, 9);
+  return Promise.resolve(testCompletion(position, 5)).catch((err) => {
+    assert.ok(false, `error in OpenTextDocument ${err}`);
+  });
+});
+
 test("test exact Match", () => {
   const position = new vscode.Position(14, 4);
   return Promise.resolve(testCompletion(position, 0)).catch((err) => {
@@ -112,7 +144,8 @@ test("test camelCase:false style and kebab-case completion", () => {
   return Promise.resolve(
     testCompletionWithCase(position, false, [
       (items) => assert.strictEqual(1, items.length),
-      (items) => assert.strictEqual(`['sidebar_without-header']`, items[0].insertText),
+      (items) =>
+        assert.strictEqual(`['sidebar_without-header']`, items[0].insertText),
     ])
   ).catch((err) => {
     assert.ok(false, `error in OpenTextDocument ${err}`);

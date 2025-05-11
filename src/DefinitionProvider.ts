@@ -12,7 +12,11 @@ import {
   genImportRegExp,
   resolveImportPath,
 } from "./utils/path";
-import { AliasFromUserOptions, CamelCaseValues, ExtensionOptions } from "./options";
+import {
+  AliasFromUserOptions,
+  CamelCaseValues,
+  ExtensionOptions,
+} from "./options";
 import * as path from "path";
 import * as fs from "fs";
 import * as _ from "lodash";
@@ -31,16 +35,23 @@ interface Keyword {
 }
 
 function getWords(line: string, position: Position): string {
+  const splitRegex = /\.|\["|\['/;
+
   const headText = line.slice(0, position.character);
-  const startIndex = headText.search(/[a-zA-Z0-9._]*$/);
+  const startIndex = headText.search(/[a-zA-Z0-9._["']*$/);
   // not found or not clicking object field
-  if (startIndex === -1 || headText.slice(startIndex).indexOf(".") === -1) {
+  if (startIndex === -1 || !splitRegex.test(headText.slice(startIndex))) {
     return "";
   }
 
-  const match = /^([a-zA-Z0-9._]*)/.exec(line.slice(startIndex));
+  const match = /^([a-zA-Z0-9._["']*)/.exec(line.slice(startIndex));
   if (match === null) {
     return "";
+  }
+
+  if (match[1].includes('["') || match[1].includes("['")) {
+    // Remove " or ' from end
+    return match[1].slice(0, -1);
   }
 
   return match[1];
@@ -79,22 +90,24 @@ function getPosition(
   /**
    * This is a simple solution for definition match.
    * Only guarantee keyword not follow normal characters
-   * 
+   *
    * if we want match [.main] classname
    * escaped dot char first and then use RegExp to match
    * more detail -> https://github.com/clinyong/vscode-css-modules/pull/41#discussion_r696247941
-   * 
+   *
    * 1. .main,   // valid
    * 2. .main    // valid
-   * 
+   *
    * 3. .main-sub   // invalid
    * 4. .main09     // invalid
    * 5. .main_bem   // invalid
    * 6. .mainsuffix // invalid
-   * 
+   *
    * @TODO Refact by new tokenizer later
    */
-  const keyWordMatchReg = new RegExp(`${keyWord.replace(/^\./, '\\.')}(?![_0-9a-zA-Z-])`);
+  const keyWordMatchReg = new RegExp(
+    `${keyWord.replace(/^\./, "\\.")}(?![_0-9a-zA-Z-])`
+  );
 
   for (let i = 0; i < lines.length; i++) {
     const originalLine = lines[i];
@@ -161,12 +174,14 @@ function isImportLineMatch(
 }
 
 function getKeyword(currentLine: string, position: Position): Keyword | null {
+  const splitRegex = /\.|\["|\['/;
+
   const words = getWords(currentLine, position);
-  if (words === "" || words.indexOf(".") === -1) {
+  if (words === "" || !splitRegex.test(words)) {
     return null;
   }
 
-  const [obj, field] = words.split(".");
+  const [obj, field] = words.split(splitRegex);
   if (!obj || !field) {
     // probably a spread operator
     return null;

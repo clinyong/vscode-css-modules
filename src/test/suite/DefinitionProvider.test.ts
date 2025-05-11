@@ -181,3 +181,17 @@ test("ignore spread syntax", async () => {
   );
   assert.deepStrictEqual(result, null);
 });
+
+test("test bracket definition with double quotes jump to definition", () => {
+  const position = new vscode.Position(23, 22);
+  return Promise.resolve(testDefinition(position, 2, 1)).catch((err) =>
+    assert.ok(false, `error in OpenTextDocument ${err}`)
+  );
+});
+
+test("test bracket definition with single quotes jump to definition", () => {
+  const position = new vscode.Position(24, 22);
+  return Promise.resolve(testDefinition(position, 2, 1)).catch((err) =>
+    assert.ok(false, `error in OpenTextDocument ${err}`)
+  );
+});
