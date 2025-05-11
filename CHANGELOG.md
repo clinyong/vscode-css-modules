@@ -1,3 +1,7 @@
+## 0.5.4
+
+- Implement support for bracket syntax. [#92](https://github.com/clinyong/vscode-css-modules/pull/92) for detail.
+
 ## 0.5.3
 
 - Add support for Astro files. [#98](https://github.com/clinyong/vscode-css-modules/pull/98) for detail.
