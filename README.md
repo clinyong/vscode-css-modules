@@ -10,6 +10,10 @@ Extension for [CSS Modules](https://github.com/css-modules/css-modules), which s
 - Autocomplete
 - Go to definition
 
+## Additional Features
+
+- **Experimental:** SASS (.sass) file support for class name completion
+
 ## Demo
 
 ![](https://i.giphy.com/l0EwY2Mk4IBgIholi.gif)

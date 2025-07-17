@@ -10,6 +10,7 @@ import {
   SAMPLE_TSX_FILE,
   SAMPLE_TS_FILE,
   STYLUS_JSX_FILE,
+  SASS_JSX_FILE,
 } from "../constant";
 import { readOptions } from "../utils";
 
@@ -19,6 +20,7 @@ const uri3 = vscode.Uri.file(SAMPLE_JS_FILE);
 const uri4 = vscode.Uri.file(SAMPLE_TSX_FILE);
 const uri5 = vscode.Uri.file(SAMPLE_TS_FILE);
 const uri6 = vscode.Uri.file(SAMPLE_ASTRO_FILE);
+const uri7 = vscode.Uri.file(SASS_JSX_FILE);
 
 function testCompletion(
   position: vscode.Position,
@@ -207,6 +209,13 @@ test("support ts", () => {
 test("support astro", () => {
   const position = new vscode.Position(8, 28);
   return Promise.resolve(testCompletion(position, 5, uri6)).catch((err) => {
+    assert.ok(false, `error in OpenTextDocument ${err}`);
+  });
+});
+
+test("support .sass completion", () => {
+  const position = new vscode.Position(4, 27);
+  return Promise.resolve(testCompletion(position, 14, uri7)).catch((err) => {
     assert.ok(false, `error in OpenTextDocument ${err}`);
   });
 });

@@ -1,0 +1,20 @@
+.foo
+  color: red
+
+.bar, .baz
+  background: blue
+
+.parent
+  &.active
+    color: green
+  & .activeSpace
+    color: blue
+  > .child
+    color: yellow
+  + .sibling
+    color: orange
+  ~ .other
+    color: purple
+
+  .complex, &.compound, >.direct, +.adjacent, ~.general
+    border: 1px solid black 

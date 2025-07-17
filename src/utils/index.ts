@@ -1,4 +1,11 @@
-import { Position, TextDocument, CompletionItem, CompletionItemKind, TextEdit, Range } from "vscode";
+import {
+  Position,
+  TextDocument,
+  CompletionItem,
+  CompletionItemKind,
+  TextEdit,
+  Range,
+} from "vscode";
 import * as fse from "fs-extra";
 import * as _ from "lodash";
 
@@ -12,7 +19,10 @@ export function getCurrentLine(
 /**
  * @TODO Refact by new Tokenizer
  */
-export async function getAllClassNames(filePath: string, keyword: string): Promise<string[]> {
+export async function getAllClassNames(
+  filePath: string,
+  keyword: string
+): Promise<string[]> {
   // check file exists, if not just return []
   const filePathStat = await fse.stat(filePath);
   if (!filePathStat.isFile()) {
@@ -22,10 +32,16 @@ export async function getAllClassNames(filePath: string, keyword: string): Promi
   const content = await fse.readFile(filePath, { encoding: "utf8" });
   let matchLineRegexp = /.*[,{]/g;
 
-   // experimental stylus support
-  if (filePath.endsWith(".styl") ||filePath.endsWith(".stylus")) {
-    matchLineRegexp = /\..*/g
+  // experimental stylus support
+  if (filePath.endsWith(".styl") || filePath.endsWith(".stylus")) {
+    matchLineRegexp = /\..*/g;
   }
+
+  // experimental sass support
+  if (filePath.endsWith(".sass")) {
+    matchLineRegexp = /(^|[\s,&>+~])\.[_A-Za-z0-9-]+/gm;
+  }
+
   const lines = content.match(matchLineRegexp);
   if (lines === null) {
     return [];
@@ -36,7 +52,10 @@ export async function getAllClassNames(filePath: string, keyword: string): Promi
     return [];
   }
 
-  const uniqNames = _.uniq(classNames).map((item) => item.slice(1)).filter((item) => !/^[0-9]/.test(item));
+  const uniqNames = _.uniq(classNames)
+    .map((item) => item.slice(1))
+    .filter((item) => !/^[0-9]/.test(item));
+
   return keyword !== ""
     ? uniqNames.filter((item) => item.indexOf(keyword) !== -1)
     : uniqNames;
@@ -53,19 +72,33 @@ export function dashesCamelCase(str: string): string {
 /**
  * check kebab-case classname
  */
-export function isKebabCaseClassName (className: string): boolean {
-  return className?.includes('-');
+export function isKebabCaseClassName(className: string): boolean {
+  return className?.includes("-");
 }
 
 /**
  * BracketCompletionItem Factory
  */
-export function createBracketCompletionItem (className: string, position: Position): CompletionItem {
-  const completionItem = new CompletionItem(className, CompletionItemKind.Variable);
+export function createBracketCompletionItem(
+  className: string,
+  position: Position
+): CompletionItem {
+  const completionItem = new CompletionItem(
+    className,
+    CompletionItemKind.Variable
+  );
   completionItem.detail = `['${className}']`;
-  completionItem.documentation = "kebab-casing may cause unexpected behavior when trying to access style.class-name as a dot notation. You can still work around kebab-case with bracket notation (eg. style['class-name']) but style.className is cleaner.";
+  completionItem.documentation =
+    "kebab-casing may cause unexpected behavior when trying to access style.class-name as a dot notation. You can still work around kebab-case with bracket notation (eg. style['class-name']) but style.className is cleaner.";
   completionItem.insertText = `['${className}']`;
-  completionItem.additionalTextEdits = [new TextEdit(new Range(new Position(position.line, position.character - 1),
-      new Position(position.line, position.character)), '')];
+  completionItem.additionalTextEdits = [
+    new TextEdit(
+      new Range(
+        new Position(position.line, position.character - 1),
+        new Position(position.line, position.character)
+      ),
+      ""
+    ),
+  ];
   return completionItem;
 }
